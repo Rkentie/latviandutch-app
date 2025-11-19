@@ -15,7 +15,7 @@ A beautiful, interactive language learning application for mastering Latvian and
 
 ## 🚀 Live Demo
 
-**Try it now:** [https://latviandutch-5k6ocpghr-rkentie12-gmailcoms-projects.vercel.app](https://latviandutch-5k6ocpghr-rkentie12-gmailcoms-projects.vercel.app)
+**Try it now:** [https://latviandutch-app.vercel.app/]
 
 ## 🛠️ Technologies Used
 
