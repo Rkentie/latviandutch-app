@@ -1,0 +1,6 @@
+{
+  "name": "LatvianDutch app",
+  "description": "A Duolingo-style application for learning Dutch from Latvian or Latvian from Dutch.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}
