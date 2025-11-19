@@ -4,6 +4,7 @@ export interface VocabularyItem {
   latvian: string;
   dutch: string;
   isSentence?: boolean;
+  category?: string;
 }
 
 export enum FeedbackStatus {
@@ -23,6 +24,18 @@ export interface RoundHistoryItem {
   isCorrectOnFirstTry: boolean;
   isCorrectOnSecondTry: boolean;
   correctTranslation: string;
+}
+
+export interface UserProgress {
+  items: Record<string, {
+    masteryLevel: number; // 0-5, where 5 is mastered
+    nextReviewDate: number; // Timestamp
+    lastReviewed: number; // Timestamp
+  }>;
+  streak: {
+    currentStreak: number;
+    lastPlayedDate: string; // YYYY-MM-DD
+  };
 }
 
 export interface LeaderboardEntry {

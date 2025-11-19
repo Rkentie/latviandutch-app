@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { VocabularyItem, FeedbackStatus, LanguageDirection, RoundHistoryItem, AppLanguage } from '../types';
 import { getBaseVocabulary } from '../services/vocabularyService';
+import { updateItemProgress, updateStreak, getDueItems, getProgress } from '../services/progressService';
 import { checkAnswerWithFuzzyMatch } from '../utils/stringUtils';
 
 const STORAGE_KEYS = {
@@ -8,6 +9,7 @@ const STORAGE_KEYS = {
   ROUND_SIZE: 'latvianDutch_roundSize',
   APP_LANGUAGE: 'latvianDutch_appLanguage',
   CURRENT_SESSION: 'latvianDutch_currentSession',
+  SELECTED_CATEGORY: 'latvianDutch_selectedCategory',
 };
 
 interface CurrentSession {
@@ -18,6 +20,7 @@ interface CurrentSession {
   currentWord: VocabularyItem | null;
   attemptCount: number;
   timestamp: number; // To check if session is stale
+  selectedCategory: string;
 }
 
 export const useGameLogic = () => {
@@ -44,15 +47,25 @@ export const useGameLogic = () => {
   const [attemptCount, setAttemptCount] = useState<number>(0);
   const [roundHistory, setRoundHistory] = useState<RoundHistoryItem[]>([]);
   const [isRoundOverviewVisible, setIsRoundOverviewVisible] = useState<boolean>(false);
-  const [languageDirection, setLanguageDirection] = useState<LanguageDirection | null>(() => 
+  const [languageDirection, setLanguageDirection] = useState<LanguageDirection | null>(() =>
     loadFromStorage(STORAGE_KEYS.LANGUAGE_DIRECTION, null)
   );
   const [isAppStarted, setIsAppStarted] = useState<boolean>(false);
   const [isLoadingVocabulary, setIsLoadingVocabulary] = useState<boolean>(false);
   const [showMainContent, setShowMainContent] = useState<boolean>(false);
-  const [appLanguage, setAppLanguage] = useState<AppLanguage>(() => 
+  const [appLanguage, setAppLanguage] = useState<AppLanguage>(() =>
     loadFromStorage(STORAGE_KEYS.APP_LANGUAGE, 'en')
   );
+  const [selectedCategory, setSelectedCategory] = useState<string>(() =>
+    loadFromStorage(STORAGE_KEYS.SELECTED_CATEGORY, 'All')
+  );
+  const [streak, setStreak] = useState<number>(0);
+
+  // Initialize streak
+  useEffect(() => {
+    const progress = getProgress();
+    setStreak(progress.streak.currentStreak);
+  }, []);
 
   // Save preferences to localStorage
   useEffect(() => {
@@ -69,6 +82,10 @@ export const useGameLogic = () => {
     localStorage.setItem(STORAGE_KEYS.APP_LANGUAGE, JSON.stringify(appLanguage));
   }, [appLanguage]);
 
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.SELECTED_CATEGORY, JSON.stringify(selectedCategory));
+  }, [selectedCategory]);
+
   // Save current session to localStorage
   useEffect(() => {
     if (isAppStarted && currentRoundVocabulary.length > 0 && !isRoundOverviewVisible) {
@@ -80,16 +97,17 @@ export const useGameLogic = () => {
         currentWord,
         attemptCount,
         timestamp: Date.now(),
+        selectedCategory,
       };
       localStorage.setItem(STORAGE_KEYS.CURRENT_SESSION, JSON.stringify(session));
     }
-  }, [score, currentRoundIndex, roundHistory, currentRoundVocabulary, currentWord, attemptCount, isAppStarted, isRoundOverviewVisible]);
+  }, [score, currentRoundIndex, roundHistory, currentRoundVocabulary, currentWord, attemptCount, isAppStarted, isRoundOverviewVisible, selectedCategory]);
 
   // Try to restore session on mount
   useEffect(() => {
     const savedSession = loadFromStorage<CurrentSession | null>(STORAGE_KEYS.CURRENT_SESSION, null);
     const TWO_HOURS = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
-    
+
     if (savedSession && Date.now() - savedSession.timestamp < TWO_HOURS) {
       // Session is still valid
       setScore(savedSession.score);
@@ -98,6 +116,7 @@ export const useGameLogic = () => {
       setCurrentRoundVocabulary(savedSession.currentRoundVocabulary);
       setCurrentWord(savedSession.currentWord);
       setAttemptCount(savedSession.attemptCount);
+      setSelectedCategory(savedSession.selectedCategory || 'All');
       setIsAppStarted(true);
       setShowMainContent(true);
     }
@@ -131,9 +150,45 @@ export const useGameLogic = () => {
   const startNewRound = useCallback(() => {
     if (fullVocabularyList.length === 0) return;
 
-    const shuffled = [...fullVocabularyList].sort(() => Math.random() - 0.5);
-    const actualSize = Math.min(roundSize, shuffled.length);
-    const roundVocab = shuffled.slice(0, actualSize);
+    // 1. Filter by Category
+    let candidates = fullVocabularyList;
+    if (selectedCategory && selectedCategory !== 'All') {
+      candidates = fullVocabularyList.filter(item => item.category === selectedCategory);
+    }
+
+    if (candidates.length === 0) {
+      // Fallback if category empty (shouldn't happen)
+      candidates = fullVocabularyList;
+    }
+
+    // 2. Select Items (SRS Priority)
+    let roundVocab: VocabularyItem[] = [];
+
+    if (roundSize >= 180) {
+      // Marathon mode: take all candidates
+      roundVocab = candidates;
+    } else {
+      // Get due items from candidates
+      const dueItems = getDueItems(candidates, roundSize);
+
+      // If we need more items to fill the round
+      if (dueItems.length < roundSize) {
+        const remainingCount = roundSize - dueItems.length;
+        const usedIds = new Set(dueItems.map(i => i.id));
+        const remainingCandidates = candidates.filter(i => !usedIds.has(i.id));
+
+        // Shuffle remaining
+        const shuffledRemaining = [...remainingCandidates].sort(() => Math.random() - 0.5);
+        const fillers = shuffledRemaining.slice(0, remainingCount);
+
+        roundVocab = [...dueItems, ...fillers];
+      } else {
+        roundVocab = dueItems;
+      }
+    }
+
+    // Shuffle the final round vocabulary so due items aren't always first
+    roundVocab = roundVocab.sort(() => Math.random() - 0.5);
 
     setCurrentRoundVocabulary(roundVocab);
     setCurrentRoundIndex(0);
@@ -143,7 +198,7 @@ export const useGameLogic = () => {
     setIsRoundOverviewVisible(false);
     resetPerWordState();
     setShowMainContent(true);
-  }, [fullVocabularyList, resetPerWordState, roundSize]);
+  }, [fullVocabularyList, resetPerWordState, roundSize, selectedCategory]);
 
   useEffect(() => {
     if (fullVocabularyList.length > 0 && isAppStarted && !isRoundOverviewVisible) {
@@ -155,10 +210,16 @@ export const useGameLogic = () => {
     }
   }, [fullVocabularyList, isAppStarted, startNewRound, isRoundOverviewVisible, currentRoundVocabulary.length, currentWord]);
 
-  const handleSelectDirection = (direction: LanguageDirection, selectedRoundSize: number) => {
+  const handleSelectDirection = (direction: LanguageDirection, selectedRoundSize: number, category: string = 'All') => {
     setLanguageDirection(direction);
     setRoundSize(selectedRoundSize);
+    setSelectedCategory(category);
     setIsAppStarted(true);
+
+    // Update streak on start
+    const newStreak = updateStreak();
+    setStreak(newStreak);
+
     // Reset state
     setFullVocabularyList([]);
     setCurrentRoundVocabulary([]);
@@ -188,6 +249,10 @@ export const useGameLogic = () => {
     setShowMainContent(false);
     // Clear saved session
     localStorage.removeItem(STORAGE_KEYS.CURRENT_SESSION);
+
+    // Refresh streak
+    const progress = getProgress();
+    setStreak(progress.streak.currentStreak);
   };
 
   const handleInputChange = (value: string) => {
@@ -207,6 +272,9 @@ export const useGameLogic = () => {
     let historyItemUpdate: Partial<RoundHistoryItem>;
 
     if (attemptCount === 0) {
+      // Update SRS Progress
+      updateItemProgress(currentWord.id, isCorrect);
+
       if (isCorrect) {
         setFeedbackMessage(isCloseCall ? t.feedback_close_call : t.feedback_perfect);
         setFeedbackStatus(FeedbackStatus.CORRECT);
@@ -227,6 +295,8 @@ export const useGameLogic = () => {
         setFeedbackMessage(isCloseCall ? t.feedback_close_call : t.feedback_correct);
         setFeedbackStatus(FeedbackStatus.CORRECT);
         historyItemUpdate = { userAttempts: [...existingHistoryItem.userAttempts, userInput], isCorrectOnSecondTry: true };
+        // We don't update SRS on second attempt to avoid gaming it, or we could with a smaller increment
+        // For now, only first attempt counts for SRS
       } else {
         setFeedbackMessage(t.feedback_incorrect);
         setFeedbackStatus(FeedbackStatus.INCORRECT);
@@ -280,6 +350,8 @@ export const useGameLogic = () => {
     isLoadingVocabulary,
     showMainContent,
     appLanguage,
+    selectedCategory,
+    streak,
     // Actions
     setAppLanguage,
     handleSelectDirection,
@@ -288,6 +360,6 @@ export const useGameLogic = () => {
     checkAnswer,
     nextWord,
     restartQuiz,
+    setSelectedCategory,
   };
 };
-

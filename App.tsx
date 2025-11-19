@@ -35,20 +35,22 @@ const App: React.FC = () => {
     checkAnswer,
     nextWord,
     restartQuiz,
+    streak,
   } = useGameLogic();
 
   const t = translations[appLanguage];
 
   if (!isAppStarted) {
     return (
-      <StartScreen 
-        onSelectDirection={handleSelectDirection} 
-        appLanguage={appLanguage} 
-        setAppLanguage={setAppLanguage} 
+      <StartScreen
+        onSelectDirection={handleSelectDirection}
+        appLanguage={appLanguage}
+        setAppLanguage={setAppLanguage}
+        streak={streak}
       />
     );
   }
-  
+
   if (isLoadingVocabulary) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 p-4">
@@ -58,40 +60,41 @@ const App: React.FC = () => {
     );
   }
 
-  const isMarathon = currentRoundVocabulary.length >= 180; 
+  const isMarathon = currentRoundVocabulary.length >= 180;
 
   if (isRoundOverviewVisible) {
     return (
-      <RoundOverview 
+      <RoundOverview
         history={roundHistory}
         score={score}
         roundSize={currentRoundVocabulary.length}
         onStartNewRound={restartQuiz}
-        languageDirection={languageDirection!} 
+        languageDirection={languageDirection!}
         onGoHome={handleGoHome}
         isMarathon={isMarathon}
         t={t}
       />
     );
   }
-  
-  const correctTranslationForFeedback = currentWord && languageDirection !== null ? 
-    (languageDirection === LanguageDirection.LV_TO_NL ? currentWord.dutch : currentWord.latvian) 
+
+  const correctTranslationForFeedback = currentWord && languageDirection !== null ?
+    (languageDirection === LanguageDirection.LV_TO_NL ? currentWord.dutch : currentWord.latvian)
     : undefined;
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-slate-50 pb-24 sm:pb-0 relative">
       {/* Subtle animated background pattern */}
       <div className="fixed inset-0 z-0 opacity-40 pointer-events-none bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px]"></div>
-       
-      <Header 
-        score={score} 
-        currentWordIndex={currentRoundIndex} 
-        totalWords={currentRoundVocabulary.length} 
+
+      <Header
+        score={score}
+        currentWordIndex={currentRoundIndex}
+        totalWords={currentRoundVocabulary.length}
         onGoHome={handleGoHome}
         t={t}
+        streak={streak}
       />
-      
+
       <main className={`container mx-auto p-4 flex flex-col items-center flex-grow w-full transition-all duration-300 ease-in-out z-10 ${showMainContent ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
         {currentWord && languageDirection !== null && (
           <div className="w-full max-w-2xl flex flex-col items-center" key={currentWord.id}>
@@ -105,7 +108,7 @@ const App: React.FC = () => {
               feedbackStatus={feedbackStatus}
               t={t}
             />
-            
+
             <FeedbackDisplay
               status={feedbackStatus}
               message={feedbackMessage}
