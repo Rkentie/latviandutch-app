@@ -1,5 +1,6 @@
 import React from 'react';
 import { FeedbackStatus, LanguageDirection } from './types';
+import { MARATHON_SIZE } from './constants';
 import { translations } from './services/translations';
 import { useGameLogic } from './hooks/useGameLogic';
 import VocabularyCard from './components/VocabularyCard';
@@ -9,6 +10,7 @@ import Header from './components/Header';
 import LoadingSpinner from './components/LoadingSpinner';
 import StartScreen from './components/StartScreen';
 import RoundOverview from './components/RoundOverview';
+import CategorySelectionScreen from './components/CategorySelectionScreen';
 
 const App: React.FC = () => {
   const {
@@ -25,11 +27,13 @@ const App: React.FC = () => {
     isRoundOverviewVisible,
     languageDirection,
     isAppStarted,
+    isCategorySelectionMode,
     isLoadingVocabulary,
     showMainContent,
     appLanguage,
     setAppLanguage,
     handleSelectDirection,
+    startGame,
     handleGoHome,
     handleInputChange,
     checkAnswer,
@@ -39,6 +43,16 @@ const App: React.FC = () => {
   } = useGameLogic();
 
   const t = translations[appLanguage];
+
+  if (isCategorySelectionMode) {
+    return (
+      <CategorySelectionScreen
+        onStartGame={startGame}
+        onBack={handleGoHome}
+        appLanguage={appLanguage}
+      />
+    );
+  }
 
   if (!isAppStarted) {
     return (
@@ -60,7 +74,7 @@ const App: React.FC = () => {
     );
   }
 
-  const isMarathon = currentRoundVocabulary.length >= 180;
+  const isMarathon = currentRoundVocabulary.length >= MARATHON_SIZE;
 
   if (isRoundOverviewVisible) {
     return (

@@ -39,7 +39,16 @@ const RoundOverview: React.FC<RoundOverviewProps> = ({
   }, [isMarathon]);
 
   const getPromptedWord = (item: VocabularyItem): string => {
-    return languageDirection === LanguageDirection.LV_TO_NL ? item.latvian : item.dutch;
+    // Source word shown as the prompt depends on language direction
+    switch (languageDirection) {
+      case LanguageDirection.LV_TO_NL:
+      case LanguageDirection.LV_TO_EN:
+        return item.latvian; // Latvian is the source
+      case LanguageDirection.NL_TO_LV:
+        return item.dutch; // Dutch is the source
+      default:
+        return item.latvian;
+    }
   };
 
   const getStatusText = (item: RoundHistoryItem): string => {
@@ -217,8 +226,8 @@ const RoundOverview: React.FC<RoundOverviewProps> = ({
           {activeTab === 'leaderboard' && (
              <div className="animate-fadeIn">
                <div className="text-center mb-8">
-                 <h2 className="text-3xl font-black text-orange-500 nunito-font mb-2">Marathon Leaderboard</h2>
-                 <p className="text-slate-500">Top scorers in the 180-word challenge</p>
+                 <h2 className="text-3xl font-black text-orange-500 nunito-font mb-2">{t.leaderboard_title}</h2>
+                 <p className="text-slate-500">{t.leaderboard_subtitle}</p>
                </div>
                
                {leaderboard.length === 0 ? (

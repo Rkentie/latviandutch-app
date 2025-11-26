@@ -29,10 +29,21 @@ const VocabularyCard: React.FC<VocabularyCardProps> = ({
     }
   };
 
-  const sourceLanguageName = languageDirection === LanguageDirection.LV_TO_NL ? t.lang_latvian : t.lang_dutch;
-  const targetLanguageName = languageDirection === LanguageDirection.LV_TO_NL ? t.lang_dutch : t.lang_latvian;
-  const wordToDisplay = languageDirection === LanguageDirection.LV_TO_NL ? item.latvian : item.dutch;
-  const targetFlag = languageDirection === LanguageDirection.LV_TO_NL ? "🇳🇱" : "🇱🇻";
+  // Determine source language, target language, and flags based on direction
+  const getLanguageInfo = () => {
+    switch (languageDirection) {
+      case LanguageDirection.LV_TO_NL:
+        return { source: t.lang_latvian, target: t.lang_dutch, word: item.latvian, flag: "🇳🇱" };
+      case LanguageDirection.NL_TO_LV:
+        return { source: t.lang_dutch, target: t.lang_latvian, word: item.dutch, flag: "🇱🇻" };
+      case LanguageDirection.LV_TO_EN:
+        return { source: t.lang_latvian, target: t.lang_english, word: item.latvian, flag: "🇬🇧" };
+      default:
+        return { source: t.lang_latvian, target: t.lang_dutch, word: item.latvian, flag: "🇳🇱" };
+    }
+  };
+
+  const { source: sourceLanguageName, target: targetLanguageName, word: wordToDisplay, flag: targetFlag } = getLanguageInfo();
 
   // Dynamic Styles
   let containerBorder = "border-slate-100";

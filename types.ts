@@ -3,6 +3,7 @@ export interface VocabularyItem {
   id: string;
   latvian: string;
   dutch: string;
+  english: string;
   isSentence?: boolean;
   category?: string;
 }
@@ -16,6 +17,7 @@ export enum FeedbackStatus {
 export enum LanguageDirection {
   LV_TO_NL = 'LV_TO_NL', // Latvian to Dutch
   NL_TO_LV = 'NL_TO_LV', // Dutch to Latvian
+  LV_TO_EN = 'LV_TO_EN', // Latvian to English
 }
 
 export interface RoundHistoryItem {
@@ -107,6 +109,8 @@ export interface Translation {
   start_new_round: string;
   lang_latvian: string;
   lang_dutch: string;
+  lang_english: string;
+  learn_en: string;
   // Tutorial keys
   tut_welcome_title: string;
   tut_welcome_desc: string;
@@ -119,4 +123,12 @@ export interface Translation {
   tut_next: string;
   tut_skip: string;
   tut_finish: string;
+  // Category Selection
+  select_categories: string;
+  select_all: string;
+  deselect_all: string;
+  start_practice: string;
+  // Leaderboard
+  leaderboard_title: string;
+  leaderboard_subtitle: string;
 }

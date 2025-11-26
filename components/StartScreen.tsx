@@ -1,16 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { LanguageDirection, AppLanguage } from '../types';
 import { translations } from '../services/translations';
-import { getCategories } from '../services/vocabularyService';
+import { ROUND_OPTIONS, DEFAULT_ROUND_SIZE_INDEX, MARATHON_SIZE } from '../constants';
 import {
-  Trophy, ChevronRight, Flame, Layers, Palette, User, Shirt,
-  Dog, Apple, Coffee, Activity, Briefcase, Globe, Calendar,
-  Hash, ListOrdered, Type, MapPin, Link2, HelpCircle,
-  Monitor, Utensils, Heart
+  Trophy, ChevronRight, Flame
 } from 'lucide-react';
 
 interface StartScreenProps {
-  onSelectDirection: (direction: LanguageDirection, roundSize: number, category: string) => void;
+  onSelectDirection: (direction: LanguageDirection, roundSize: number) => void;
   appLanguage: AppLanguage;
   setAppLanguage: (lang: AppLanguage) => void;
   streak?: number;
@@ -19,49 +16,14 @@ interface StartScreenProps {
 const StartScreen: React.FC<StartScreenProps> = ({ onSelectDirection, appLanguage, setAppLanguage, streak = 0 }) => {
   const t = translations[appLanguage];
 
-  // Discrete steps for the slider
-  const roundOptions = [5, 10, 20, 50, 180];
   const roundLabels = t.round_labels;
 
   // We track the index (0-4), not the raw value
-  const [sliderIndex, setSliderIndex] = useState<number>(1); // Default to 10 (index 1)
-  const [categories, setCategories] = useState<string[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [sliderIndex, setSliderIndex] = useState<number>(DEFAULT_ROUND_SIZE_INDEX);
 
-  const currentRoundSize = roundOptions[sliderIndex];
+  const currentRoundSize = ROUND_OPTIONS[sliderIndex];
   const currentLabel = roundLabels[sliderIndex];
-  const isMarathon = currentRoundSize === 180;
-
-  useEffect(() => {
-    setCategories(['All', ...getCategories()]);
-  }, []);
-
-  // Icon mapping for categories
-  const getCategoryIcon = (category: string) => {
-    switch (category) {
-      case 'All': return <Layers className="w-4 h-4" />;
-      case 'Colors & Shapes': return <Palette className="w-4 h-4" />;
-      case 'Body Parts': return <User className="w-4 h-4" />;
-      case 'Clothing & Accessories': return <Shirt className="w-4 h-4" />;
-      case 'Animals': return <Dog className="w-4 h-4" />;
-      case 'Fruits & Vegetables': return <Apple className="w-4 h-4" />;
-      case 'Drinks & Beverages': return <Coffee className="w-4 h-4" />;
-      case 'Sports & Activities': return <Activity className="w-4 h-4" />;
-      case 'Professions & Jobs': return <Briefcase className="w-4 h-4" />;
-      case 'Countries & Nationalities': return <Globe className="w-4 h-4" />;
-      case 'Months, Days & Seasons': return <Calendar className="w-4 h-4" />;
-      case 'Numbers & Math': return <Hash className="w-4 h-4" />;
-      case 'Ordinal Numbers': return <ListOrdered className="w-4 h-4" />;
-      case 'Adjectives': return <Type className="w-4 h-4" />;
-      case 'Prepositions': return <MapPin className="w-4 h-4" />;
-      case 'Conjunctions': return <Link2 className="w-4 h-4" />;
-      case 'Questions': return <HelpCircle className="w-4 h-4" />;
-      case 'Technology': return <Monitor className="w-4 h-4" />;
-      case 'Kitchen': return <Utensils className="w-4 h-4" />;
-      case 'Health': return <Heart className="w-4 h-4" />;
-      default: return <Layers className="w-4 h-4" />;
-    }
-  };
+  const isMarathon = currentRoundSize === MARATHON_SIZE;
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-indigo-600 via-purple-600 to-orange-500 p-4 animate-fadeIn relative overflow-hidden">
@@ -141,31 +103,11 @@ const StartScreen: React.FC<StartScreenProps> = ({ onSelectDirection, appLanguag
         <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-2xl w-full transform transition-all duration-500 ease-out animate-slideUp border border-white/50" style={{ animationDelay: '0.2s' }}>
 
           <div className="mb-8">
-            {/* Category Selector - Redesigned */}
-            <div className="mb-6">
-              <label className="text-slate-500 font-bold uppercase tracking-wider text-sm mb-2 block">Category</label>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-48 overflow-y-auto pr-1 custom-scrollbar">
-                {categories.map(cat => (
-                  <button
-                    key={cat}
-                    onClick={() => setSelectedCategory(cat)}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-bold transition-all duration-200 text-left ${selectedCategory === cat
-                        ? 'bg-indigo-600 text-white shadow-md transform scale-105'
-                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                      }`}
-                  >
-                    {getCategoryIcon(cat)}
-                    <span className="truncate">{cat}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
             <div className="flex justify-between items-end mb-6">
               <label className="text-slate-500 font-bold uppercase tracking-wider text-sm">{t.lesson_length}</label>
               <div className="text-right">
                 <span className={`block text-3xl font-black nunito-font transition-colors ${isMarathon ? 'text-orange-500' : 'text-indigo-600'}`}>
-                  {currentRoundSize === 180 ? 'All' : currentRoundSize} <span className="text-lg text-slate-400 font-bold">{t.words}</span>
+                  {currentRoundSize === MARATHON_SIZE ? 'All' : currentRoundSize} <span className="text-lg text-slate-400 font-bold">{t.words}</span>
                 </span>
                 <span className="text-xs font-bold text-slate-400 uppercase tracking-wide">{currentLabel}</span>
               </div>
@@ -174,17 +116,17 @@ const StartScreen: React.FC<StartScreenProps> = ({ onSelectDirection, appLanguag
             {/* Custom Range Slider Container */}
             <div className="relative w-full h-12 flex items-center justify-center">
 
-              {/* Visual Track Background */}
-              <div className="absolute w-full h-3 bg-slate-100 rounded-full overflow-hidden">
+            {/* Visual Track Background */}
+            <div className="absolute w-full h-3 bg-slate-100 rounded-full overflow-hidden">
                 <div
                   className={`h-full transition-all duration-200 ease-out ${isMarathon ? 'bg-orange-400' : 'bg-indigo-200'}`}
-                  style={{ width: `${(sliderIndex / (roundOptions.length - 1)) * 100}%` }}
+                  style={{ width: `${(sliderIndex / (ROUND_OPTIONS.length - 1)) * 100}%` }}
                 ></div>
               </div>
 
               {/* Snap Points (Dots) */}
               <div className="absolute w-full flex justify-between px-[10px] pointer-events-none">
-                {roundOptions.map((_, idx) => (
+                {ROUND_OPTIONS.map((_, idx) => (
                   <div
                     key={idx}
                     className={`w-4 h-4 rounded-full transition-colors duration-200 ${idx <= sliderIndex ? (isMarathon ? 'bg-orange-500' : 'bg-indigo-500') : 'bg-slate-300'}`}
@@ -196,7 +138,7 @@ const StartScreen: React.FC<StartScreenProps> = ({ onSelectDirection, appLanguag
               <input
                 type="range"
                 min="0"
-                max={roundOptions.length - 1}
+                max={ROUND_OPTIONS.length - 1}
                 step="1"
                 value={sliderIndex}
                 onChange={(e) => setSliderIndex(parseInt(e.target.value))}
@@ -208,7 +150,7 @@ const StartScreen: React.FC<StartScreenProps> = ({ onSelectDirection, appLanguag
               <div
                 className={`absolute h-8 w-8 bg-white border-4 rounded-full shadow-lg z-10 pointer-events-none transition-all duration-200 ease-out flex items-center justify-center ${isMarathon ? 'border-orange-500' : 'border-indigo-600'}`}
                 style={{
-                  left: `calc(${(sliderIndex / (roundOptions.length - 1)) * 100}% - 16px)`
+                  left: `calc(${(sliderIndex / (ROUND_OPTIONS.length - 1)) * 100}% - 16px)`
                 }}
               >
                 <div className={`w-2 h-2 rounded-full ${isMarathon ? 'bg-orange-500' : 'bg-indigo-600'}`}></div>
@@ -217,14 +159,14 @@ const StartScreen: React.FC<StartScreenProps> = ({ onSelectDirection, appLanguag
 
             {/* Labels below slider */}
             <div className="flex justify-between text-[10px] sm:text-xs text-slate-400 font-bold mt-3 uppercase tracking-wide select-none">
-              {roundOptions.map((opt, idx) => (
+              {ROUND_OPTIONS.map((opt, idx) => (
                 <span
                   key={idx}
                   className={`transition-colors ${idx === sliderIndex ? (isMarathon ? 'text-orange-500' : 'text-indigo-600') : ''}`}
                   onClick={() => setSliderIndex(idx)} // Allow clicking labels
                   style={{ cursor: 'pointer' }}
                 >
-                  {opt === 180 ? 'All' : opt}
+                  {opt === MARATHON_SIZE ? 'All' : opt}
                 </span>
               ))}
             </div>
@@ -232,11 +174,15 @@ const StartScreen: React.FC<StartScreenProps> = ({ onSelectDirection, appLanguag
 
           <div className="space-y-4">
             <button
-              onClick={() => onSelectDirection(LanguageDirection.LV_TO_NL, currentRoundSize, selectedCategory)}
+              onClick={() => onSelectDirection(LanguageDirection.LV_TO_NL, currentRoundSize)}
               className="group w-full p-4 sm:p-5 rounded-2xl border-b-4 border-slate-200 hover:border-indigo-500 bg-slate-50 hover:bg-indigo-50 transition-all duration-200 ease-in-out flex items-center justify-between active:border-b-0 active:translate-y-1"
             >
               <div className="flex items-center space-x-4">
-                <span className="text-4xl">🇱🇻</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-3xl">🇱🇻</span>
+                  <ChevronRight className="w-4 h-4 text-slate-300" />
+                  <span className="text-3xl">🇳🇱</span>
+                </div>
                 <div className="text-left">
                   <div className="text-xs font-bold text-slate-400 uppercase tracking-wider group-hover:text-indigo-400">{t.i_speak_lv}</div>
                   <div className="font-bold text-slate-800 text-lg group-hover:text-indigo-700 transition-colors">{t.learn_nl}</div>
@@ -248,11 +194,15 @@ const StartScreen: React.FC<StartScreenProps> = ({ onSelectDirection, appLanguag
             </button>
 
             <button
-              onClick={() => onSelectDirection(LanguageDirection.NL_TO_LV, currentRoundSize, selectedCategory)}
+              onClick={() => onSelectDirection(LanguageDirection.NL_TO_LV, currentRoundSize)}
               className="group w-full p-4 sm:p-5 rounded-2xl border-b-4 border-slate-200 hover:border-orange-500 bg-slate-50 hover:bg-orange-50 transition-all duration-200 ease-in-out flex items-center justify-between active:border-b-0 active:translate-y-1"
             >
               <div className="flex items-center space-x-4">
-                <span className="text-4xl">🇳🇱</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-3xl">🇳🇱</span>
+                  <ChevronRight className="w-4 h-4 text-slate-300" />
+                  <span className="text-3xl">🇱🇻</span>
+                </div>
                 <div className="text-left">
                   <div className="text-xs font-bold text-slate-400 uppercase tracking-wider group-hover:text-orange-400">{t.i_speak_nl}</div>
                   <div className="font-bold text-slate-800 text-lg group-hover:text-orange-700 transition-colors">{t.learn_lv}</div>
@@ -262,6 +212,27 @@ const StartScreen: React.FC<StartScreenProps> = ({ onSelectDirection, appLanguag
                 <ChevronRight className="w-5 h-5" strokeWidth={2.5} />
               </span>
             </button>
+
+            <button
+              onClick={() => onSelectDirection(LanguageDirection.LV_TO_EN, currentRoundSize)}
+              className="group w-full p-4 sm:p-5 rounded-2xl border-b-4 border-slate-200 hover:border-blue-500 bg-slate-50 hover:bg-blue-50 transition-all duration-200 ease-in-out flex items-center justify-between active:border-b-0 active:translate-y-1"
+            >
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-3xl">🇱🇻</span>
+                  <ChevronRight className="w-4 h-4 text-slate-300" />
+                  <span className="text-3xl">🇬🇧</span>
+                </div>
+                <div className="text-left">
+                  <div className="text-xs font-bold text-slate-400 uppercase tracking-wider group-hover:text-blue-400">{t.i_speak_lv}</div>
+                  <div className="font-bold text-slate-800 text-lg group-hover:text-blue-700 transition-colors">{t.learn_en}</div>
+                </div>
+              </div>
+              <span className="bg-white p-2 rounded-full shadow-sm text-slate-300 group-hover:text-blue-500 transition-colors">
+                <ChevronRight className="w-5 h-5" strokeWidth={2.5} />
+              </span>
+            </button>
+
           </div>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { VocabularyItem, FeedbackStatus, LanguageDirection, RoundHistoryItem, AppLanguage } from '../types';
+import { MARATHON_SIZE } from '../constants';
 import { getBaseVocabulary } from '../services/vocabularyService';
 import { updateItemProgress, updateStreak, getDueItems, getProgress } from '../services/progressService';
 import { checkAnswerWithFuzzyMatch } from '../utils/stringUtils';
@@ -9,7 +10,7 @@ const STORAGE_KEYS = {
   ROUND_SIZE: 'latvianDutch_roundSize',
   APP_LANGUAGE: 'latvianDutch_appLanguage',
   CURRENT_SESSION: 'latvianDutch_currentSession',
-  SELECTED_CATEGORY: 'latvianDutch_selectedCategory',
+  SELECTED_CATEGORIES: 'latvianDutch_selectedCategories',
 };
 
 interface CurrentSession {
@@ -20,7 +21,7 @@ interface CurrentSession {
   currentWord: VocabularyItem | null;
   attemptCount: number;
   timestamp: number; // To check if session is stale
-  selectedCategory: string;
+  selectedCategories: string[];
 }
 
 export const useGameLogic = () => {
@@ -51,13 +52,14 @@ export const useGameLogic = () => {
     loadFromStorage(STORAGE_KEYS.LANGUAGE_DIRECTION, null)
   );
   const [isAppStarted, setIsAppStarted] = useState<boolean>(false);
+  const [isCategorySelectionMode, setIsCategorySelectionMode] = useState<boolean>(false);
   const [isLoadingVocabulary, setIsLoadingVocabulary] = useState<boolean>(false);
   const [showMainContent, setShowMainContent] = useState<boolean>(false);
   const [appLanguage, setAppLanguage] = useState<AppLanguage>(() =>
     loadFromStorage(STORAGE_KEYS.APP_LANGUAGE, 'en')
   );
-  const [selectedCategory, setSelectedCategory] = useState<string>(() =>
-    loadFromStorage(STORAGE_KEYS.SELECTED_CATEGORY, 'All')
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(() =>
+    loadFromStorage(STORAGE_KEYS.SELECTED_CATEGORIES, [])
   );
   const [streak, setStreak] = useState<number>(0);
 
@@ -83,8 +85,8 @@ export const useGameLogic = () => {
   }, [appLanguage]);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.SELECTED_CATEGORY, JSON.stringify(selectedCategory));
-  }, [selectedCategory]);
+    localStorage.setItem(STORAGE_KEYS.SELECTED_CATEGORIES, JSON.stringify(selectedCategories));
+  }, [selectedCategories]);
 
   // Save current session to localStorage
   useEffect(() => {
@@ -97,11 +99,11 @@ export const useGameLogic = () => {
         currentWord,
         attemptCount,
         timestamp: Date.now(),
-        selectedCategory,
+        selectedCategories,
       };
       localStorage.setItem(STORAGE_KEYS.CURRENT_SESSION, JSON.stringify(session));
     }
-  }, [score, currentRoundIndex, roundHistory, currentRoundVocabulary, currentWord, attemptCount, isAppStarted, isRoundOverviewVisible, selectedCategory]);
+  }, [score, currentRoundIndex, roundHistory, currentRoundVocabulary, currentWord, attemptCount, isAppStarted, isRoundOverviewVisible, selectedCategories]);
 
   // Try to restore session on mount
   useEffect(() => {
@@ -116,7 +118,7 @@ export const useGameLogic = () => {
       setCurrentRoundVocabulary(savedSession.currentRoundVocabulary);
       setCurrentWord(savedSession.currentWord);
       setAttemptCount(savedSession.attemptCount);
-      setSelectedCategory(savedSession.selectedCategory || 'All');
+      setSelectedCategories(savedSession.selectedCategories || []);
       setIsAppStarted(true);
       setShowMainContent(true);
     }
@@ -152,8 +154,8 @@ export const useGameLogic = () => {
 
     // 1. Filter by Category
     let candidates = fullVocabularyList;
-    if (selectedCategory && selectedCategory !== 'All') {
-      candidates = fullVocabularyList.filter(item => item.category === selectedCategory);
+    if (selectedCategories.length > 0 && !selectedCategories.includes('All')) {
+      candidates = fullVocabularyList.filter(item => item.category && selectedCategories.includes(item.category));
     }
 
     if (candidates.length === 0) {
@@ -164,7 +166,7 @@ export const useGameLogic = () => {
     // 2. Select Items (SRS Priority)
     let roundVocab: VocabularyItem[] = [];
 
-    if (roundSize >= 180) {
+    if (roundSize >= MARATHON_SIZE) {
       // Marathon mode: take all candidates
       roundVocab = candidates;
     } else {
@@ -198,7 +200,7 @@ export const useGameLogic = () => {
     setIsRoundOverviewVisible(false);
     resetPerWordState();
     setShowMainContent(true);
-  }, [fullVocabularyList, resetPerWordState, roundSize, selectedCategory]);
+  }, [fullVocabularyList, resetPerWordState, roundSize, selectedCategories]);
 
   useEffect(() => {
     if (fullVocabularyList.length > 0 && isAppStarted && !isRoundOverviewVisible) {
@@ -210,10 +212,16 @@ export const useGameLogic = () => {
     }
   }, [fullVocabularyList, isAppStarted, startNewRound, isRoundOverviewVisible, currentRoundVocabulary.length, currentWord]);
 
-  const handleSelectDirection = (direction: LanguageDirection, selectedRoundSize: number, category: string = 'All') => {
+  const handleSelectDirection = (direction: LanguageDirection, selectedRoundSize: number) => {
     setLanguageDirection(direction);
     setRoundSize(selectedRoundSize);
-    setSelectedCategory(category);
+    setIsCategorySelectionMode(true);
+    setIsAppStarted(false);
+  };
+
+  const startGame = (categories: string[]) => {
+    setSelectedCategories(categories);
+    setIsCategorySelectionMode(false);
     setIsAppStarted(true);
 
     // Update streak on start
@@ -236,6 +244,7 @@ export const useGameLogic = () => {
 
   const handleGoHome = () => {
     setIsAppStarted(false);
+    setIsCategorySelectionMode(false);
     setLanguageDirection(null);
     setFullVocabularyList([]);
     setCurrentRoundVocabulary([]);
@@ -262,9 +271,14 @@ export const useGameLogic = () => {
   const checkAnswer = useCallback((t: any) => {
     if (!currentWord || languageDirection === null) return;
 
-    const correctTranslationRaw = languageDirection === LanguageDirection.LV_TO_NL
-      ? currentWord.dutch
-      : currentWord.latvian;
+    let correctTranslationRaw = '';
+    if (languageDirection === LanguageDirection.LV_TO_NL) {
+      correctTranslationRaw = currentWord.dutch;
+    } else if (languageDirection === LanguageDirection.NL_TO_LV) {
+      correctTranslationRaw = currentWord.latvian;
+    } else if (languageDirection === LanguageDirection.LV_TO_EN) {
+      correctTranslationRaw = currentWord.english;
+    }
 
     const answerResult = checkAnswerWithFuzzyMatch(userInput, correctTranslationRaw);
     const { isCorrect, isCloseCall } = answerResult;
@@ -347,19 +361,22 @@ export const useGameLogic = () => {
     isRoundOverviewVisible,
     languageDirection,
     isAppStarted,
+    isCategorySelectionMode,
     isLoadingVocabulary,
     showMainContent,
     appLanguage,
-    selectedCategory,
+    selectedCategories,
     streak,
     // Actions
     setAppLanguage,
     handleSelectDirection,
+    startGame,
     handleGoHome,
     handleInputChange,
     checkAnswer,
     nextWord,
     restartQuiz,
-    setSelectedCategory,
+    setSelectedCategories,
   };
 };
+
