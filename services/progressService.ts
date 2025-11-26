@@ -1,4 +1,5 @@
 import { UserProgress, VocabularyItem } from '../types';
+import { shuffleArray } from '../utils/stringUtils';
 
 const STORAGE_KEY = 'latvianDutch_userProgress';
 
@@ -98,20 +99,11 @@ export const getDueItems = (allVocabulary: VocabularyItem[], limit: number): Voc
         return itemProgress.nextReviewDate <= now;
     });
 
-    // Sort by priority: 
-    // 1. Overdue items (lowest nextReviewDate)
-    // 2. New items (no progress)
-    dueItems.sort((a, b) => {
-        const progA = progress.items[a.id];
-        const progB = progress.items[b.id];
+    // Shuffle due items to randomize order, then take the first 'limit' items
+    // This ensures randomization while still prioritizing due items over non-due items
+    const shuffledDueItems = shuffleArray(dueItems);
 
-        const dateA = progA ? progA.nextReviewDate : 0;
-        const dateB = progB ? progB.nextReviewDate : 0;
-
-        return dateA - dateB;
-    });
-
-    return dueItems.slice(0, limit);
+    return shuffledDueItems.slice(0, limit);
 };
 
 export const getMasteryStats = (allVocabulary: VocabularyItem[]) => {

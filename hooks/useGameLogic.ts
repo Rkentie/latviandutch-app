@@ -3,7 +3,7 @@ import { VocabularyItem, FeedbackStatus, LanguageDirection, RoundHistoryItem, Ap
 import { MARATHON_SIZE } from '../constants';
 import { getBaseVocabulary } from '../services/vocabularyService';
 import { updateItemProgress, updateStreak, getDueItems, getProgress } from '../services/progressService';
-import { checkAnswerWithFuzzyMatch } from '../utils/stringUtils';
+import { checkAnswerWithFuzzyMatch, shuffleArray } from '../utils/stringUtils';
 
 const STORAGE_KEYS = {
   LANGUAGE_DIRECTION: 'latvianDutch_languageDirection',
@@ -163,14 +163,18 @@ export const useGameLogic = () => {
       candidates = fullVocabularyList;
     }
 
-    // 2. Select Items (SRS Priority)
+    // 2. Shuffle candidates FIRST to ensure randomization regardless of SRS priority
+    // This ensures that even when selecting due items, the order is randomized
+    candidates = shuffleArray(candidates);
+
+    // 3. Select Items (SRS Priority)
     let roundVocab: VocabularyItem[] = [];
 
     if (roundSize >= MARATHON_SIZE) {
-      // Marathon mode: take all candidates
+      // Marathon mode: take all candidates (already shuffled)
       roundVocab = candidates;
     } else {
-      // Get due items from candidates
+      // Get due items from shuffled candidates
       const dueItems = getDueItems(candidates, roundSize);
 
       // If we need more items to fill the round
@@ -179,9 +183,8 @@ export const useGameLogic = () => {
         const usedIds = new Set(dueItems.map(i => i.id));
         const remainingCandidates = candidates.filter(i => !usedIds.has(i.id));
 
-        // Shuffle remaining
-        const shuffledRemaining = [...remainingCandidates].sort(() => Math.random() - 0.5);
-        const fillers = shuffledRemaining.slice(0, remainingCount);
+        // Take random items from remaining (already shuffled)
+        const fillers = remainingCandidates.slice(0, remainingCount);
 
         roundVocab = [...dueItems, ...fillers];
       } else {
@@ -189,8 +192,9 @@ export const useGameLogic = () => {
       }
     }
 
-    // Shuffle the final round vocabulary so due items aren't always first
-    roundVocab = roundVocab.sort(() => Math.random() - 0.5);
+    // 4. Final shuffle to ensure complete randomization
+    // This ensures due items aren't always first, even if they were prioritized
+    roundVocab = shuffleArray(roundVocab);
 
     setCurrentRoundVocabulary(roundVocab);
     setCurrentRoundIndex(0);
