@@ -3,6 +3,7 @@ import { FeedbackStatus, LanguageDirection } from './types';
 import { MARATHON_SIZE } from './constants';
 import { translations } from './services/translations';
 import { useGameLogic } from './hooks/useGameLogic';
+import { getPrimaryAnswer } from './services/vocabularyService';
 import VocabularyCard from './components/VocabularyCard';
 import FeedbackDisplay from './components/FeedbackDisplay';
 import Controls from './components/Controls';
@@ -91,8 +92,8 @@ const App: React.FC = () => {
     );
   }
 
-  const correctTranslationForFeedback = currentWord && languageDirection !== null ?
-    (languageDirection === LanguageDirection.LV_TO_NL ? currentWord.dutch : currentWord.latvian)
+  const correctTranslationForFeedback = currentWord && languageDirection !== null
+    ? getPrimaryAnswer(currentWord, languageDirection)
     : undefined;
 
   return (
@@ -126,7 +127,7 @@ const App: React.FC = () => {
             <FeedbackDisplay
               status={feedbackStatus}
               message={feedbackMessage}
-              correctAnswer={feedbackStatus === FeedbackStatus.INCORRECT ? correctTranslationForFeedback : undefined}
+              correctAnswer={feedbackStatus === FeedbackStatus.INCORRECT && isAnswerChecked ? correctTranslationForFeedback : undefined}
               key={`${currentWord.id}-${feedbackStatus}-${attemptCount}`}
               t={t}
             />

@@ -4,6 +4,10 @@ export interface VocabularyItem {
   latvian: string;
   dutch: string;
   english: string;
+  // Other answers that also count as correct (e.g. 'Bedankt' next to 'Dank je')
+  latvianAlt?: string[];
+  dutchAlt?: string[];
+  englishAlt?: string[];
   isSentence?: boolean;
   category?: string;
 }
@@ -81,6 +85,7 @@ export interface Translation {
   feedback_correct: string;
   feedback_incorrect: string;
   feedback_close_call: string;
+  feedback_accent: string;
   round_summary: string;
   marathon_results: string;
   my_results: string;

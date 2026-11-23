@@ -5,3 +5,7 @@ export const MARATHON_SIZE = 180;
 // Default round size index (maps to 10 words)
 export const DEFAULT_ROUND_SIZE_INDEX = 1;
 
+
+// Scoring
+export const POINTS_FIRST_TRY = 10;
+export const POINTS_SECOND_TRY = 5;

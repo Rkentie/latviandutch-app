@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { RoundHistoryItem, LanguageDirection, VocabularyItem, LeaderboardEntry, Translation } from '../types';
 import { getLeaderboard, saveScore } from '../services/leaderboardService';
 import { Home } from 'lucide-react';
+import { POINTS_FIRST_TRY } from '../constants';
 
 interface RoundOverviewProps {
   history: RoundHistoryItem[];
@@ -63,7 +64,9 @@ const RoundOverview: React.FC<RoundOverviewProps> = ({
     return "text-red-700 bg-red-100 border-red-200";
   };
 
-  const percentage = Math.round((score / roundSize) * 100);
+  // Accuracy = points earned out of the maximum possible (10 per word)
+  const maxPoints = roundSize * POINTS_FIRST_TRY;
+  const percentage = maxPoints > 0 ? Math.round((score / maxPoints) * 100) : 0;
   let resultMessage = t.keep_practicing;
   if (percentage > 80) resultMessage = t.amazing_work;
   else if (percentage > 50) resultMessage = t.good_job;
