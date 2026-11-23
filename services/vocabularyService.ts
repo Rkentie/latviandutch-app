@@ -1,26 +1,26 @@
-import { VocabularyItem } from '../types';
+import { VocabularyItem, LanguageDirection } from '../types';
 
 const initialVocabulary: VocabularyItem[] = [
   // --- ESSENTIAL BASICS (20) ---
-  { id: '1', latvian: 'Sveiki', dutch: 'Hallo', english: 'Hello', category: 'Basics' },
-  { id: '2', latvian: 'Paldies', dutch: 'Dank je', english: 'Thank you', category: 'Basics' },
+  { id: '1', latvian: 'Sveiki', latvianAlt: ['Čau', 'Labdien'], dutch: 'Hallo', english: 'Hello', dutchAlt: ['Hoi', 'Dag'], englishAlt: ['Hi'], category: 'Basics' },
+  { id: '2', latvian: 'Paldies', dutch: 'Dank je', english: 'Thank you', dutchAlt: ['Dank je wel', 'Bedankt', 'Dank u', 'Dank u wel'], englishAlt: ['Thanks'], category: 'Basics' },
   { id: '3', latvian: 'Lūdzu', dutch: 'Alsjeblieft', english: 'Please', category: 'Basics' },
   { id: '4', latvian: 'Jā', dutch: 'Ja', english: 'Yes', category: 'Basics' },
   { id: '5', latvian: 'Nē', dutch: 'Nee', english: 'No', category: 'Basics' },
   { id: '6', latvian: 'Es', dutch: 'Ik', english: 'I', category: 'Basics' },
-  { id: '7', latvian: 'Tu', dutch: 'Jij', english: 'You', category: 'Basics' },
+  { id: '7', latvian: 'Tu', dutch: 'Jij', english: 'You', dutchAlt: ['Je'], category: 'Basics' },
   { id: '8', latvian: 'Viņš', dutch: 'Hij', english: 'He', category: 'Basics' },
-  { id: '9', latvian: 'Viņa', dutch: 'Zij', english: 'She', category: 'Basics' },
-  { id: '10', latvian: 'Mēs', dutch: 'Wij', english: 'We', category: 'Basics' },
+  { id: '9', latvian: 'Viņa', dutch: 'Zij', english: 'She', dutchAlt: ['Ze'], category: 'Basics' },
+  { id: '10', latvian: 'Mēs', dutch: 'Wij', english: 'We', dutchAlt: ['We'], category: 'Basics' },
   { id: '11', latvian: 'Labrīt', dutch: 'Goedemorgen', english: 'Good morning', category: 'Basics' },
   { id: '12', latvian: 'Labdien', dutch: 'Goedemiddag', english: 'Good afternoon', category: 'Basics' },
   { id: '13', latvian: 'Labvakar', dutch: 'Goedenavond', english: 'Good evening', category: 'Basics' },
   { id: '14', latvian: 'Ar labunakti', dutch: 'Welterusten', english: 'Good night', category: 'Basics' },
-  { id: '15', latvian: 'Uz redzēšanos', dutch: 'Tot ziens', english: 'Goodbye', category: 'Basics' },
+  { id: '15', latvian: 'Uz redzēšanos', dutch: 'Tot ziens', english: 'Goodbye', englishAlt: ['Bye'], category: 'Basics' },
   { id: '16', latvian: 'Kā iet?', dutch: 'Hoe gaat het?', english: 'How are you?', category: 'Basics' },
-  { id: '17', latvian: 'Labi', dutch: 'Goed', english: 'Good', category: 'Basics' },
-  { id: '18', latvian: 'Slikti', dutch: 'Slecht', english: 'Bad', category: 'Basics' },
-  { id: '19', latvian: 'Atvainojiet', dutch: 'Pardon', english: 'Excuse me', category: 'Basics' },
+  { id: '17', latvian: 'Labi', dutch: 'Goed', latvianAlt: ['Labs'], english: 'Good', category: 'Basics' },
+  { id: '18', latvian: 'Slikti', dutch: 'Slecht', latvianAlt: ['Slikts'], english: 'Bad', category: 'Basics' },
+  { id: '19', latvian: 'Atvainojiet', latvianAlt: ['Atvainojos', 'Atvaino'], dutch: 'Pardon', english: 'Excuse me', category: 'Basics' },
   { id: '20', latvian: 'Nekas', dutch: 'Geen probleem', english: 'No problem', category: 'Basics' },
 
   // --- SENTENCES: INTRODUCTIONS (10) ---
@@ -58,7 +58,7 @@ const initialVocabulary: VocabularyItem[] = [
   { id: '48', latvian: 'Pa kreisi.', dutch: 'Naar links.', english: 'To the left.', isSentence: true, category: 'Travel' },
   { id: '49', latvian: 'Taisni uz priekšu.', dutch: 'Rechtdoor.', english: 'Straight ahead.', isSentence: true, category: 'Travel' },
   { id: '50', latvian: 'Vai tas ir tālu?', dutch: 'Is het ver?', english: 'Is it far?', isSentence: true, category: 'Travel' },
-  { id: '51', latvian: 'Pestājiet šeit, lūdzu.', dutch: 'Stop hier, alstublieft.', english: 'Stop here, please.', isSentence: true, category: 'Travel' },
+  { id: '51', latvian: 'Apstājieties šeit, lūdzu.', dutch: 'Stop hier, alstublieft.', english: 'Stop here, please.', isSentence: true, category: 'Travel' },
   { id: '52', latvian: 'Es esmu apmaldījies.', dutch: 'Ik ben de weg kwijt.', english: 'I am lost.', isSentence: true, category: 'Travel' },
   { id: '53', latvian: 'Vai jūs varat man palīdzēt?', dutch: 'Kunt u mij helpen?', english: 'Can you help me?', isSentence: true, category: 'Travel' },
   { id: '54', latvian: 'Kur es varu nopirkt biļeti?', dutch: 'Waar kan ik een kaartje kopen?', english: 'Where can I buy a ticket?', isSentence: true, category: 'Travel' },
@@ -79,7 +79,7 @@ const initialVocabulary: VocabularyItem[] = [
   { id: '67', latvian: 'Cik tas maksā?', dutch: 'Hoeveel kost dat?', english: 'How much does it cost?', isSentence: true, category: 'Food' },
   { id: '68', latvian: 'Vai varu maksāt ar karti?', dutch: 'Kan ik met kaart betalen?', english: 'Can I pay by card?', isSentence: true, category: 'Food' },
   { id: '69', latvian: 'Mēs gribētu pasūtīt.', dutch: 'Wij willen graag bestellen.', english: 'We would like to order.', isSentence: true, category: 'Food' },
-  { id: '70', latvian: 'Uz veselību!', dutch: 'Proost!', english: 'Cheers!', isSentence: true, category: 'Food' },
+  { id: '70', latvian: 'Uz veselību!', dutch: 'Proost!', dutchAlt: ['Gezondheid!'], english: 'Cheers!', englishAlt: ['Bless you!'], isSentence: true, category: 'Food' },
 
   // --- SENTENCES: SHOPPING (10) ---
   { id: '71', latvian: 'Cikos veikals atveras?', dutch: 'Hoe laat gaat de winkel open?', english: 'What time does the shop open?', isSentence: true, category: 'Shopping' },
@@ -124,16 +124,16 @@ const initialVocabulary: VocabularyItem[] = [
 
   // --- SENTENCES: TIME & WEATHER (15) ---
   { id: '106', latvian: 'Cik ir pulkstenis?', dutch: 'Hoe laat is het?', english: 'What time is it?', isSentence: true, category: 'Time & Weather' },
-  { id: '107', latvian: 'Ir pulkstenis pieci.', dutch: 'Het is vijf uur.', english: 'It is five o\'clock.', isSentence: true, category: 'Time & Weather' },
-  { id: '108', latvian: 'Šodien ir silts.', dutch: 'Het is warm vandaag.', english: 'It is warm today.', isSentence: true, category: 'Time & Weather' },
-  { id: '109', latvian: 'Lietus līst.', dutch: 'Het regent.', english: 'It is raining.', isSentence: true, category: 'Time & Weather' },
+  { id: '107', latvian: 'Pulkstenis ir pieci.', latvianAlt: ['Ir pulkstenis pieci.'], dutch: 'Het is vijf uur.', english: 'It is five o\'clock.', isSentence: true, category: 'Time & Weather' },
+  { id: '108', latvian: 'Šodien ir silti.', dutch: 'Het is warm vandaag.', english: 'It is warm today.', isSentence: true, category: 'Time & Weather' },
+  { id: '109', latvian: 'Lietus līst.', latvianAlt: ['Līst lietus.', 'Līst.'], dutch: 'Het regent.', english: 'It is raining.', isSentence: true, category: 'Time & Weather' },
   { id: '110', latvian: 'Spīd saule.', dutch: 'De zon schijnt.', english: 'The sun is shining.', isSentence: true, category: 'Time & Weather' },
-  { id: '111', latvian: 'Snieg sniegs.', dutch: 'Het sneeuwt.', english: 'It is snowing.', isSentence: true, category: 'Time & Weather' },
+  { id: '111', latvian: 'Snieg sniegs.', latvianAlt: ['Snieg.'], dutch: 'Het sneeuwt.', english: 'It is snowing.', isSentence: true, category: 'Time & Weather' },
   { id: '112', latvian: 'Ir vējains.', dutch: 'Het waait.', english: 'It is windy.', isSentence: true, category: 'Time & Weather' },
   { id: '113', latvian: 'Kāds šodien ir datums?', dutch: 'Welke datum is het vandaag?', english: 'What is the date today?', isSentence: true, category: 'Time & Weather' },
   { id: '114', latvian: 'Daudz laimes dzimšanas dienā!', dutch: 'Gefeliciteerd met je verjaardag!', english: 'Happy Birthday!', isSentence: true, category: 'Time & Weather' },
   { id: '115', latvian: 'Laimīgu Jauno gadu!', dutch: 'Gelukkig Nieuwjaar!', english: 'Happy New Year!', isSentence: true, category: 'Time & Weather' },
-  { id: '116', latvian: 'Es kavēšu.', dutch: 'Ik zal laat zijn.', english: 'I will be late.', isSentence: true, category: 'Time & Weather' },
+  { id: '116', latvian: 'Es kavēšos.', latvianAlt: ['Es nokavēšos.'], dutch: 'Ik zal laat zijn.', english: 'I will be late.', isSentence: true, category: 'Time & Weather' },
   { id: '117', latvian: 'Esmu gatavs.', dutch: 'Ik ben klaar.', english: 'I am ready.', isSentence: true, category: 'Time & Weather' },
   { id: '118', latvian: 'Pagaidi mirkli.', dutch: 'Wacht even.', english: 'Wait a moment.', isSentence: true, category: 'Time & Weather' },
   { id: '119', latvian: 'Apmēram stundu.', dutch: 'Ongeveer een uur.', english: 'About an hour.', isSentence: true, category: 'Time & Weather' },
@@ -181,7 +181,7 @@ const initialVocabulary: VocabularyItem[] = [
   { id: '153', latvian: 'Man sāp galva.', dutch: 'Ik heb hoofdpijn.', english: 'I have a headache.', isSentence: true, category: 'Health' },
   { id: '154', latvian: 'Esmu saaukstējies.', dutch: 'Ik ben verkouden.', english: 'I have a cold.', isSentence: true, category: 'Health' },
   { id: '155', latvian: 'Tev vajadzētu atpūsties.', dutch: 'Je moet rusten.', english: 'You should rest.', isSentence: true, category: 'Health' },
-  { id: '156', latvian: 'Uz veselību!', dutch: 'Gezondheid!', english: 'Bless you!', isSentence: true, category: 'Health' },
+  { id: '156', latvian: 'Uz veselību!', dutch: 'Gezondheid!', dutchAlt: ['Proost!'], english: 'Bless you!', englishAlt: ['Cheers!'], isSentence: true, category: 'Health' },
   { id: '157', latvian: 'Esi uzmanīgs.', dutch: 'Wees voorzichtig.', english: 'Be careful.', isSentence: true, category: 'Health' },
   { id: '158', latvian: 'Tas ir bīstami.', dutch: 'Dat is gevaarlijk.', english: 'That is dangerous.', isSentence: true, category: 'Health' },
   { id: '159', latvian: 'Izsauc ātro palīdzību.', dutch: 'Bel een ambulance.', english: 'Call an ambulance.', isSentence: true, category: 'Health' },
@@ -190,13 +190,13 @@ const initialVocabulary: VocabularyItem[] = [
   // --- PRACTICAL & TRAVEL NUANCES (10) ---
   { id: '161', latvian: 'Kur ir tuvākais bankomāts?', dutch: 'Waar is de dichtstbijzijnde geldautomaat?', english: 'Where is the nearest ATM?', isSentence: true, category: 'Travel' },
   { id: '162', latvian: 'Vai varu maksāt skaidrā naudā?', dutch: 'Kan ik contant betalen?', english: 'Can I pay in cash?', isSentence: true, category: 'Travel' },
-  { id: '163', latvian: 'Saglabājiet atlikumu.', dutch: 'Hou het wisselgeld maar.', english: 'Keep the change.', isSentence: true, category: 'Travel' },
+  { id: '163', latvian: 'Paturiet atlikumu.', dutch: 'Hou het wisselgeld maar.', english: 'Keep the change.', isSentence: true, category: 'Travel' },
   { id: '164', latvian: 'Vai ir atlaide?', dutch: 'Is er korting?', english: 'Is there a discount?', isSentence: true, category: 'Travel' },
   { id: '165', latvian: 'Es gribētu izīrēt velosipēdu.', dutch: 'Ik wil een fiets huren.', english: 'I would like to rent a bicycle.', isSentence: true, category: 'Travel' },
-  { id: '166', latvian: 'Vai šis vieta ir brīva?', dutch: 'Is deze stoel vrij?', english: 'Is this seat free?', isSentence: true, category: 'Travel' },
+  { id: '166', latvian: 'Vai šī vieta ir brīva?', dutch: 'Is deze stoel vrij?', english: 'Is this seat free?', isSentence: true, category: 'Travel' },
   { id: '167', latvian: 'Laimīgu ceļu!', dutch: 'Goede reis!', english: 'Have a good trip!', isSentence: true, category: 'Travel' },
   { id: '168', latvian: 'Laiks ir briesmīgs.', dutch: 'Het weer is verschrikkelijk.', english: 'The weather is terrible.', isSentence: true, category: 'Travel' },
-  { id: '169', latvian: 'Laukā ir auksts.', dutch: 'Het is koud buiten.', english: 'It is cold outside.', isSentence: true, category: 'Travel' },
+  { id: '169', latvian: 'Laukā ir auksti.', latvianAlt: ['Ārā ir auksti.'], dutch: 'Het is koud buiten.', english: 'It is cold outside.', isSentence: true, category: 'Travel' },
   { id: '170', latvian: 'Kādā krāsā tas ir?', dutch: 'Welke kleur is het?', english: 'What color is it?', isSentence: true, category: 'Travel' },
 
   // --- WORK & TECHNOLOGY (10) ---
@@ -310,7 +310,7 @@ const initialVocabulary: VocabularyItem[] = [
   // --- EMOTIONS & STATES (10) ---
   { id: '261', latvian: 'Es esmu dusmīgs.', dutch: 'Ik ben boos.', english: 'I am angry.', isSentence: true, category: 'Emotions' },
   { id: '262', latvian: 'Viņa ir bēdīga.', dutch: 'Zij is verdrietig.', english: 'She is sad.', isSentence: true, category: 'Emotions' },
-  { id: '263', latvian: 'Mēs esam satraukti.', dutch: 'Wij zijn opgewonden.', english: 'We are excited.', isSentence: true, category: 'Emotions' },
+  { id: '263', latvian: 'Mēs esam satraukti.', dutch: 'Wij zijn enthousiast.', dutchAlt: ['Wij zijn opgewonden.', 'We zijn enthousiast.'], english: 'We are excited.', isSentence: true, category: 'Emotions' },
   { id: '264', latvian: 'Es esmu noraizējies.', dutch: 'Ik ben bezorgd.', english: 'I am worried.', isSentence: true, category: 'Emotions' },
   { id: '265', latvian: 'Es jūtos slims.', dutch: 'Ik voel me ziek.', english: 'I feel sick.', isSentence: true, category: 'Emotions' },
   { id: '266', latvian: 'Tas ir pretīgi.', dutch: 'Dat is walgelijk.', english: 'That is disgusting.', isSentence: true, category: 'Emotions' },
@@ -345,8 +345,8 @@ const initialVocabulary: VocabularyItem[] = [
 
   // --- BODY PARTS (10) ---
   { id: '291', latvian: 'Galva', dutch: 'Hoofd', english: 'Head', category: 'Body Parts' },
-  { id: '292', latvian: 'Roka', dutch: 'Hand', english: 'Hand', category: 'Body Parts' },
-  { id: '293', latvian: 'Kāja', dutch: 'Been', english: 'Leg', category: 'Body Parts' },
+  { id: '292', latvian: 'Roka', dutch: 'Hand', dutchAlt: ['Arm'], english: 'Hand', englishAlt: ['Arm'], category: 'Body Parts' },
+  { id: '293', latvian: 'Kāja', dutch: 'Been', dutchAlt: ['Voet'], english: 'Leg', englishAlt: ['Foot'], category: 'Body Parts' },
   { id: '294', latvian: 'Acis', dutch: 'Ogen', english: 'Eyes', category: 'Body Parts' },
   { id: '295', latvian: 'Deguns', dutch: 'Neus', english: 'Nose', category: 'Body Parts' },
   { id: '296', latvian: 'Mute', dutch: 'Mond', english: 'Mouth', category: 'Body Parts' },
@@ -360,7 +360,7 @@ const initialVocabulary: VocabularyItem[] = [
   { id: '302', latvian: 'Bikses', dutch: 'Broek', english: 'Pants', category: 'Clothing & Accessories' },
   { id: '303', latvian: 'Kleita', dutch: 'Jurk', english: 'Dress', category: 'Clothing & Accessories' },
   { id: '304', latvian: 'Kurpes', dutch: 'Schoenen', english: 'Shoes', category: 'Clothing & Accessories' },
-  { id: '305', latvian: 'Cepure', dutch: 'Hoed', english: 'Hat', category: 'Clothing & Accessories' },
+  { id: '305', latvian: 'Cepure', dutch: 'Hoed', dutchAlt: ['Muts', 'Pet'], english: 'Hat', category: 'Clothing & Accessories' },
   { id: '306', latvian: 'Mētelis', dutch: 'Jas', english: 'Coat', category: 'Clothing & Accessories' },
   { id: '307', latvian: 'Zeķes', dutch: 'Sokken', english: 'Socks', category: 'Clothing & Accessories' },
   { id: '308', latvian: 'Svārki', dutch: 'Rok', english: 'Skirt', category: 'Clothing & Accessories' },
@@ -401,18 +401,18 @@ const initialVocabulary: VocabularyItem[] = [
   { id: '337', latvian: 'Vīns', dutch: 'Wijn', english: 'Wine', category: 'Drinks & Beverages' },
   { id: '338', latvian: 'Limonāde', dutch: 'Limonade', english: 'Lemonade', category: 'Drinks & Beverages' },
   { id: '339', latvian: 'Kokteilis', dutch: 'Cocktail', english: 'Cocktail', category: 'Drinks & Beverages' },
-  { id: '340', latvian: 'Ledus', dutch: 'IJs', english: 'Ice', category: 'Drinks & Beverages' },
+  { id: '340', latvian: 'Ledus', latvianAlt: ['Saldējums'], dutch: 'IJs', english: 'Ice', category: 'Drinks & Beverages' },
 
   // --- SPORTS & ACTIVITIES (10) ---
   { id: '341', latvian: 'Futbols', dutch: 'Voetbal', english: 'Football', category: 'Sports & Activities' },
   { id: '342', latvian: 'Basketbols', dutch: 'Basketbal', english: 'Basketball', category: 'Sports & Activities' },
-  { id: '343', latvian: 'Hokejs', dutch: 'Ijshockey', english: 'Hockey', category: 'Sports & Activities' },
+  { id: '343', latvian: 'Hokejs', dutch: 'IJshockey', dutchAlt: ['Hockey'], english: 'Hockey', category: 'Sports & Activities' },
   { id: '344', latvian: 'Teniss', dutch: 'Tennis', english: 'Tennis', category: 'Sports & Activities' },
-  { id: '345', latvian: 'Peldēšana', dutch: 'Zwemmen', english: 'Swimming', category: 'Sports & Activities' },
-  { id: '346', latvian: 'Skriešana', dutch: 'Hardlopen', english: 'Running', category: 'Sports & Activities' },
+  { id: '345', latvian: 'Peldēšana', latvianAlt: ['Peldēt'], dutch: 'Zwemmen', english: 'Swimming', category: 'Sports & Activities' },
+  { id: '346', latvian: 'Skriešana', latvianAlt: ['Skriet'], dutch: 'Hardlopen', english: 'Running', category: 'Sports & Activities' },
   { id: '347', latvian: 'Riteņbraukšana', dutch: 'Fietsen', english: 'Cycling', category: 'Sports & Activities' },
   { id: '348', latvian: 'Slēpošana', dutch: 'Skiën', english: 'Skiing', category: 'Sports & Activities' },
-  { id: '349', latvian: 'Dejošana', dutch: 'Dansen', english: 'Dancing', category: 'Sports & Activities' },
+  { id: '349', latvian: 'Dejošana', latvianAlt: ['Dejot'], dutch: 'Dansen', english: 'Dancing', category: 'Sports & Activities' },
   { id: '350', latvian: 'Pastaiga', dutch: 'Wandelen', english: 'Walking', category: 'Sports & Activities' },
 
   // --- PROFESSIONS & JOBS (10) ---
@@ -423,7 +423,7 @@ const initialVocabulary: VocabularyItem[] = [
   { id: '355', latvian: 'Policists', dutch: 'Politieagent', english: 'Police officer', category: 'Professions & Jobs' },
   { id: '356', latvian: 'Ugunsdzēsējs', dutch: 'Brandweerman', english: 'Firefighter', category: 'Professions & Jobs' },
   { id: '357', latvian: 'Pārdevējs', dutch: 'Verkoper', english: 'Salesperson', category: 'Professions & Jobs' },
-  { id: '358', latvian: 'Vadītājs', dutch: 'Chauffeur', english: 'Driver', category: 'Professions & Jobs' },
+  { id: '358', latvian: 'Vadītājs', latvianAlt: ['Šoferis'], dutch: 'Chauffeur', english: 'Driver', category: 'Professions & Jobs' },
   { id: '359', latvian: 'Mākslinieks', dutch: 'Kunstenaar', english: 'Artist', category: 'Professions & Jobs' },
   { id: '360', latvian: 'Zemnieks', dutch: 'Boer', english: 'Farmer', category: 'Professions & Jobs' },
 
@@ -482,8 +482,8 @@ const initialVocabulary: VocabularyItem[] = [
   { id: '404', latvian: 'Īss', dutch: 'Kort', english: 'Short', category: 'Adjectives' },
   { id: '405', latvian: 'Jauns', dutch: 'Nieuw', english: 'New', category: 'Adjectives' },
   { id: '406', latvian: 'Vecs', dutch: 'Oud', english: 'Old', category: 'Adjectives' },
-  { id: '407', latvian: 'Labs', dutch: 'Goed', english: 'Good', category: 'Adjectives' },
-  { id: '408', latvian: 'Slikts', dutch: 'Slecht', english: 'Bad', category: 'Adjectives' },
+  { id: '407', latvian: 'Labs', dutch: 'Goed', latvianAlt: ['Labi'], english: 'Good', category: 'Adjectives' },
+  { id: '408', latvian: 'Slikts', dutch: 'Slecht', latvianAlt: ['Slikti'], english: 'Bad', category: 'Adjectives' },
   { id: '409', latvian: 'Karsts', dutch: 'Heet', english: 'Hot', category: 'Adjectives' },
   { id: '410', latvian: 'Auksts', dutch: 'Koud', english: 'Cold', category: 'Adjectives' },
   { id: '411', latvian: 'Ātrs', dutch: 'Snel', english: 'Fast', category: 'Adjectives' },
@@ -500,8 +500,8 @@ const initialVocabulary: VocabularyItem[] = [
   // --- PREPOSITIONS & DIRECTIONS (10) ---
   { id: '421', latvian: 'Uz', dutch: 'Op', english: 'On', category: 'Prepositions' },
   { id: '422', latvian: 'Zem', dutch: 'Onder', english: 'Under', category: 'Prepositions' },
-  { id: '423', latvian: 'Iekša', dutch: 'In', english: 'In', category: 'Prepositions' },
-  { id: '424', latvian: 'Ārā', dutch: 'Uit', english: 'Out', category: 'Prepositions' },
+  { id: '423', latvian: 'Iekšā', dutch: 'In', english: 'In', category: 'Prepositions' },
+  { id: '424', latvian: 'Ārā', dutch: 'Buiten', dutchAlt: ['Uit'], english: 'Outside', englishAlt: ['Out'], category: 'Prepositions' },
   { id: '425', latvian: 'Pie', dutch: 'Bij', english: 'At/By', category: 'Prepositions' },
   { id: '426', latvian: 'Ar', dutch: 'Met', english: 'With', category: 'Prepositions' },
   { id: '427', latvian: 'Bez', dutch: 'Zonder', english: 'Without', category: 'Prepositions' },
@@ -559,18 +559,17 @@ const initialVocabulary: VocabularyItem[] = [
   { id: '471', latvian: 'Krūze', dutch: 'Mok', english: 'Mug', category: 'Kitchen' },
   { id: '472', latvian: 'Glāze', dutch: 'Glas', english: 'Glass', category: 'Kitchen' },
   { id: '473', latvian: 'Panna', dutch: 'Pan', english: 'Pan', category: 'Kitchen' },
-  { id: '474', latvian: 'Katls', dutch: 'Kookpot', english: 'Pot', category: 'Kitchen' },
+  { id: '474', latvian: 'Katls', dutch: 'Kookpan', dutchAlt: ['Pan', 'Kookpot'], english: 'Pot', category: 'Kitchen' },
   { id: '475', latvian: 'Bļoda', dutch: 'Kom', english: 'Bowl', category: 'Kitchen' },
   { id: '476', latvian: 'Brokastis', dutch: 'Ontbijt', english: 'Breakfast', category: 'Kitchen' },
   { id: '477', latvian: 'Pusdienas', dutch: 'Lunch', english: 'Lunch', category: 'Kitchen' },
-  { id: '478', latvian: 'Vakariņas', dutch: 'Diner', english: 'Dinner', category: 'Kitchen' },
+  { id: '478', latvian: 'Vakariņas', dutch: 'Avondeten', dutchAlt: ['Diner'], english: 'Dinner', category: 'Kitchen' },
   { id: '479', latvian: 'Sāls', dutch: 'Zout', english: 'Salt', category: 'Kitchen' },
   { id: '480', latvian: 'Pipari', dutch: 'Peper', english: 'Pepper', category: 'Kitchen' },
 
   // --- HEALTH & MEDICAL (20) ---
   { id: '481', latvian: 'Veselība', dutch: 'Gezondheid', english: 'Health', category: 'Health' },
   { id: '482', latvian: 'Slimnīca', dutch: 'Ziekenhuis', english: 'Hospital', category: 'Health' },
-  { id: '483', latvian: 'Ārsts', dutch: 'Dokter', english: 'Doctor', category: 'Health' }, // Duplicate of profession, but useful in context
   { id: '484', latvian: 'Zāles', dutch: 'Medicijnen', english: 'Medicine', category: 'Health' },
   { id: '485', latvian: 'Aptieka', dutch: 'Apotheek', english: 'Pharmacy', category: 'Health' },
   { id: '486', latvian: 'Sāpes', dutch: 'Pijn', english: 'Pain', category: 'Health' },
@@ -581,13 +580,183 @@ const initialVocabulary: VocabularyItem[] = [
   { id: '491', latvian: 'Zobārsts', dutch: 'Tandarts', english: 'Dentist', category: 'Health' },
   { id: '492', latvian: 'Asinis', dutch: 'Bloed', english: 'Blood', category: 'Health' },
   { id: '493', latvian: 'Sirds', dutch: 'Hart', english: 'Heart', category: 'Health' },
-  { id: '494', latvian: 'Vēders', dutch: 'Maag', english: 'Stomach', category: 'Health' },
-  { id: '495', latvian: 'Mugura', dutch: 'Rug', english: 'Back', category: 'Health' }, // Body part repetition but ok
+  { id: '494', latvian: 'Vēders', dutch: 'Buik', dutchAlt: ['Maag'], english: 'Belly', englishAlt: ['Stomach'], category: 'Health' },
   { id: '496', latvian: 'Alerģija', dutch: 'Allergie', english: 'Allergy', category: 'Health' },
   { id: '497', latvian: 'Vakcīna', dutch: 'Vaccin', english: 'Vaccine', category: 'Health' },
   { id: '498', latvian: 'Vīruss', dutch: 'Virus', english: 'Virus', category: 'Health' },
   { id: '499', latvian: 'Palīdzība', dutch: 'Hulp', english: 'Help', category: 'Health' },
   { id: '500', latvian: 'Dzīvība', dutch: 'Leven', english: 'Life', category: 'Health' },
+  // --- NUMBERS & MATH (added) ---
+  { id: '501', latvian: 'Četri', dutch: 'Vier', english: 'Four', category: 'Numbers & Math' },
+  { id: '502', latvian: 'Pieci', dutch: 'Vijf', english: 'Five', category: 'Numbers & Math' },
+  { id: '503', latvian: 'Seši', dutch: 'Zes', english: 'Six', category: 'Numbers & Math' },
+  { id: '504', latvian: 'Septiņi', dutch: 'Zeven', english: 'Seven', category: 'Numbers & Math' },
+  { id: '505', latvian: 'Astoņi', dutch: 'Acht', english: 'Eight', category: 'Numbers & Math' },
+  { id: '506', latvian: 'Deviņi', dutch: 'Negen', english: 'Nine', category: 'Numbers & Math' },
+  { id: '507', latvian: 'Vienpadsmit', dutch: 'Elf', english: 'Eleven', category: 'Numbers & Math' },
+  { id: '508', latvian: 'Divpadsmit', dutch: 'Twaalf', english: 'Twelve', category: 'Numbers & Math' },
+  { id: '509', latvian: 'Piecpadsmit', dutch: 'Vijftien', english: 'Fifteen', category: 'Numbers & Math' },
+  { id: '510', latvian: 'Divdesmit', dutch: 'Twintig', english: 'Twenty', category: 'Numbers & Math' },
+  { id: '511', latvian: 'Trīsdesmit', dutch: 'Dertig', english: 'Thirty', category: 'Numbers & Math' },
+  { id: '512', latvian: 'Piecdesmit', dutch: 'Vijftig', english: 'Fifty', category: 'Numbers & Math' },
+
+  // --- MONTHS, DAYS & SEASONS (added) ---
+  { id: '513', latvian: 'Trešdiena', dutch: 'Woensdag', english: 'Wednesday', category: 'Months, Days & Seasons' },
+  { id: '514', latvian: 'Ceturtdiena', dutch: 'Donderdag', english: 'Thursday', category: 'Months, Days & Seasons' },
+  { id: '515', latvian: 'Piektdiena', dutch: 'Vrijdag', english: 'Friday', category: 'Months, Days & Seasons' },
+  { id: '516', latvian: 'Sestdiena', dutch: 'Zaterdag', english: 'Saturday', category: 'Months, Days & Seasons' },
+  { id: '517', latvian: 'Svētdiena', dutch: 'Zondag', english: 'Sunday', category: 'Months, Days & Seasons' },
+  { id: '518', latvian: 'Marts', dutch: 'Maart', english: 'March', category: 'Months, Days & Seasons' },
+  { id: '519', latvian: 'Aprīlis', dutch: 'April', english: 'April', category: 'Months, Days & Seasons' },
+  { id: '520', latvian: 'Maijs', dutch: 'Mei', english: 'May', category: 'Months, Days & Seasons' },
+  { id: '521', latvian: 'Jūnijs', dutch: 'Juni', english: 'June', category: 'Months, Days & Seasons' },
+  { id: '522', latvian: 'Jūlijs', dutch: 'Juli', english: 'July', category: 'Months, Days & Seasons' },
+  { id: '523', latvian: 'Augusts', dutch: 'Augustus', english: 'August', category: 'Months, Days & Seasons' },
+  { id: '524', latvian: 'Septembris', dutch: 'September', english: 'September', category: 'Months, Days & Seasons' },
+  { id: '525', latvian: 'Oktobris', dutch: 'Oktober', english: 'October', category: 'Months, Days & Seasons' },
+  { id: '526', latvian: 'Novembris', dutch: 'November', english: 'November', category: 'Months, Days & Seasons' },
+  { id: '527', latvian: 'Decembris', dutch: 'December', english: 'December', category: 'Months, Days & Seasons' },
+  { id: '528', latvian: 'Mēnesis', dutch: 'Maand', english: 'Month', category: 'Months, Days & Seasons' },
+  { id: '529', latvian: 'Diena', dutch: 'Dag', english: 'Day', category: 'Months, Days & Seasons' },
+
+  // --- TIME WORDS (added) ---
+  { id: '530', latvian: 'Šodien', dutch: 'Vandaag', english: 'Today', category: 'Time Words' },
+  { id: '531', latvian: 'Rīt', dutch: 'Morgen', english: 'Tomorrow', category: 'Time Words' },
+  { id: '532', latvian: 'Vakar', dutch: 'Gisteren', english: 'Yesterday', category: 'Time Words' },
+  { id: '533', latvian: 'Tagad', dutch: 'Nu', english: 'Now', category: 'Time Words' },
+  { id: '534', latvian: 'Vēlāk', dutch: 'Later', english: 'Later', category: 'Time Words' },
+  { id: '535', latvian: 'Vienmēr', dutch: 'Altijd', english: 'Always', category: 'Time Words' },
+  { id: '536', latvian: 'Nekad', dutch: 'Nooit', english: 'Never', category: 'Time Words' },
+  { id: '537', latvian: 'Dažreiz', dutch: 'Soms', english: 'Sometimes', category: 'Time Words' },
+  { id: '538', latvian: 'Bieži', dutch: 'Vaak', english: 'Often', category: 'Time Words' },
+  { id: '539', latvian: 'Jau', dutch: 'Al', english: 'Already', category: 'Time Words' },
+  { id: '540', latvian: 'Vēl', dutch: 'Nog', english: 'Still/Yet', category: 'Time Words' },
+  { id: '541', latvian: 'Drīz', dutch: 'Binnenkort', english: 'Soon', category: 'Time Words' },
+  { id: '542', latvian: 'Rīts', dutch: 'Ochtend', english: 'Morning', dutchAlt: ['Morgen'], category: 'Time Words' },
+  { id: '543', latvian: 'Vakars', dutch: 'Avond', english: 'Evening', category: 'Time Words' },
+  { id: '544', latvian: 'Nakts', dutch: 'Nacht', english: 'Night', category: 'Time Words' },
+  { id: '545', latvian: 'Stunda', dutch: 'Uur', english: 'Hour', category: 'Time Words' },
+  { id: '546', latvian: 'Minūte', dutch: 'Minuut', english: 'Minute', category: 'Time Words' },
+  { id: '547', latvian: 'Nedēļas nogale', dutch: 'Weekend', english: 'Weekend', category: 'Time Words' },
+
+  // --- COMMON VERBS (added) ---
+  { id: '548', latvian: 'Būt', dutch: 'Zijn', english: 'To be', category: 'Common Verbs' },
+  { id: '549', latvian: 'Iet', dutch: 'Gaan', english: 'To go', category: 'Common Verbs' },
+  { id: '550', latvian: 'Nākt', dutch: 'Komen', english: 'To come', category: 'Common Verbs' },
+  { id: '551', latvian: 'Gribēt', dutch: 'Willen', english: 'To want', category: 'Common Verbs' },
+  { id: '552', latvian: 'Varēt', dutch: 'Kunnen', english: 'To be able to', englishAlt: ['Can', 'To be able'], category: 'Common Verbs' },
+  { id: '553', latvian: 'Zināt', dutch: 'Weten', english: 'To know', category: 'Common Verbs' },
+  { id: '554', latvian: 'Redzēt', dutch: 'Zien', english: 'To see', category: 'Common Verbs' },
+  { id: '555', latvian: 'Teikt', dutch: 'Zeggen', english: 'To say', category: 'Common Verbs' },
+  { id: '556', latvian: 'Dot', dutch: 'Geven', english: 'To give', category: 'Common Verbs' },
+  { id: '557', latvian: 'Ņemt', dutch: 'Nemen', english: 'To take', category: 'Common Verbs' },
+  { id: '558', latvian: 'Pirkt', dutch: 'Kopen', english: 'To buy', category: 'Common Verbs' },
+  { id: '559', latvian: 'Runāt', dutch: 'Spreken', english: 'To speak', dutchAlt: ['Praten'], englishAlt: ['To talk'], category: 'Common Verbs' },
+  { id: '560', latvian: 'Saprast', dutch: 'Begrijpen', english: 'To understand', category: 'Common Verbs' },
+  { id: '561', latvian: 'Dzīvot', dutch: 'Wonen', english: 'To live', dutchAlt: ['Leven'], category: 'Common Verbs' },
+  { id: '562', latvian: 'Mīlēt', dutch: 'Houden van', english: 'To love', category: 'Common Verbs' },
+  { id: '563', latvian: 'Gaidīt', dutch: 'Wachten', english: 'To wait', category: 'Common Verbs' },
+  { id: '564', latvian: 'Palīdzēt', dutch: 'Helpen', english: 'To help', category: 'Common Verbs' },
+  { id: '565', latvian: 'Atvērt', dutch: 'Openen', english: 'To open', dutchAlt: ['Opendoen'], category: 'Common Verbs' },
+  { id: '566', latvian: 'Aizvērt', dutch: 'Sluiten', english: 'To close', dutchAlt: ['Dichtdoen'], category: 'Common Verbs' },
+  { id: '567', latvian: 'Sēdēt', dutch: 'Zitten', english: 'To sit', category: 'Common Verbs' },
+  { id: '568', latvian: 'Stāvēt', dutch: 'Staan', english: 'To stand', category: 'Common Verbs' },
+  { id: '569', latvian: 'Braukt', dutch: 'Rijden', english: 'To drive', englishAlt: ['To ride'], category: 'Common Verbs' },
+  { id: '570', latvian: 'Mācīties', dutch: 'Leren', english: 'To learn', latvianAlt: ['Mācīt'], category: 'Common Verbs' },
+  { id: '571', latvian: 'Mācīt', dutch: 'Lesgeven', english: 'To teach', dutchAlt: ['Onderwijzen', 'Leren'], category: 'Common Verbs' },
+  { id: '572', latvian: 'Domāt', dutch: 'Denken', english: 'To think', category: 'Common Verbs' },
+  { id: '573', latvian: 'Klausīties', dutch: 'Luisteren', english: 'To listen', category: 'Common Verbs' },
+  { id: '574', latvian: 'Skatīties', dutch: 'Kijken', english: 'To watch', englishAlt: ['To look'], category: 'Common Verbs' },
+  { id: '575', latvian: 'Spēlēt', dutch: 'Spelen', english: 'To play', category: 'Common Verbs' },
+  { id: '576', latvian: 'Gatavot', dutch: 'Koken', english: 'To cook', category: 'Common Verbs' },
+  { id: '577', latvian: 'Maksāt', dutch: 'Betalen', english: 'To pay', category: 'Common Verbs' },
+  { id: '578', latvian: 'Meklēt', dutch: 'Zoeken', english: 'To search', englishAlt: ['To look for'], category: 'Common Verbs' },
+  { id: '579', latvian: 'Atrast', dutch: 'Vinden', english: 'To find', category: 'Common Verbs' },
+  { id: '580', latvian: 'Aizmirst', dutch: 'Vergeten', english: 'To forget', category: 'Common Verbs' },
+  { id: '581', latvian: 'Atcerēties', dutch: 'Onthouden', english: 'To remember', dutchAlt: ['Herinneren', 'Zich herinneren'], category: 'Common Verbs' },
+  { id: '582', latvian: 'Smieties', dutch: 'Lachen', english: 'To laugh', category: 'Common Verbs' },
+  { id: '583', latvian: 'Raudāt', dutch: 'Huilen', english: 'To cry', category: 'Common Verbs' },
+  { id: '584', latvian: 'Dziedāt', dutch: 'Zingen', english: 'To sing', category: 'Common Verbs' },
+  { id: '585', latvian: 'Dejot', dutch: 'Dansen', english: 'To dance', latvianAlt: ['Dejošana'], category: 'Common Verbs' },
+  { id: '586', latvian: 'Skriet', dutch: 'Rennen', english: 'To run', latvianAlt: ['Skriešana'], dutchAlt: ['Hardlopen'], category: 'Common Verbs' },
+  { id: '587', latvian: 'Peldēt', dutch: 'Zwemmen', english: 'To swim', latvianAlt: ['Peldēšana'], category: 'Common Verbs' },
+
+  // --- PLACES (added) ---
+  { id: '588', latvian: 'Pilsēta', dutch: 'Stad', english: 'City', englishAlt: ['Town'], category: 'Places' },
+  { id: '589', latvian: 'Ciems', dutch: 'Dorp', english: 'Village', category: 'Places' },
+  { id: '590', latvian: 'Iela', dutch: 'Straat', english: 'Street', category: 'Places' },
+  { id: '591', latvian: 'Veikals', dutch: 'Winkel', english: 'Shop', englishAlt: ['Store'], category: 'Places' },
+  { id: '592', latvian: 'Tirgus', dutch: 'Markt', english: 'Market', category: 'Places' },
+  { id: '593', latvian: 'Baznīca', dutch: 'Kerk', english: 'Church', category: 'Places' },
+  { id: '594', latvian: 'Parks', dutch: 'Park', english: 'Park', category: 'Places' },
+  { id: '595', latvian: 'Pludmale', dutch: 'Strand', english: 'Beach', category: 'Places' },
+  { id: '596', latvian: 'Restorāns', dutch: 'Restaurant', english: 'Restaurant', category: 'Places' },
+  { id: '597', latvian: 'Kafejnīca', dutch: 'Café', english: 'Café', dutchAlt: ['Koffietent'], englishAlt: ['Cafe'], category: 'Places' },
+  { id: '598', latvian: 'Muzejs', dutch: 'Museum', english: 'Museum', category: 'Places' },
+  { id: '599', latvian: 'Stacija', dutch: 'Station', english: 'Station', category: 'Places' },
+  { id: '600', latvian: 'Lidosta', dutch: 'Vliegveld', english: 'Airport', dutchAlt: ['Luchthaven'], category: 'Places' },
+  { id: '601', latvian: 'Banka', dutch: 'Bank', english: 'Bank', category: 'Places' },
+  { id: '602', latvian: 'Pasts', dutch: 'Postkantoor', english: 'Post office', category: 'Places' },
+  { id: '603', latvian: 'Skola', dutch: 'School', english: 'School', category: 'Places' },
+  { id: '604', latvian: 'Birojs', dutch: 'Kantoor', english: 'Office', category: 'Places' },
+  { id: '605', latvian: 'Tilts', dutch: 'Brug', english: 'Bridge', category: 'Places' },
+  { id: '606', latvian: 'Laukums', dutch: 'Plein', english: 'Square', category: 'Places' },
+  { id: '607', latvian: 'Centrs', dutch: 'Centrum', english: 'Centre', englishAlt: ['Center', 'City centre'], category: 'Places' },
+
+  // --- WEATHER (added) ---
+  { id: '608', latvian: 'Laiks', dutch: 'Weer', english: 'Weather', dutchAlt: ['Tijd'], englishAlt: ['Time'], category: 'Weather' },
+  { id: '609', latvian: 'Saule', dutch: 'Zon', english: 'Sun', category: 'Weather' },
+  { id: '610', latvian: 'Lietus', dutch: 'Regen', english: 'Rain', category: 'Weather' },
+  { id: '611', latvian: 'Sniegs', dutch: 'Sneeuw', english: 'Snow', category: 'Weather' },
+  { id: '612', latvian: 'Vējš', dutch: 'Wind', english: 'Wind', category: 'Weather' },
+  { id: '613', latvian: 'Mākonis', dutch: 'Wolk', english: 'Cloud', category: 'Weather' },
+  { id: '614', latvian: 'Negaiss', dutch: 'Onweer', english: 'Thunderstorm', englishAlt: ['Storm'], category: 'Weather' },
+  { id: '615', latvian: 'Migla', dutch: 'Mist', english: 'Fog', dutchAlt: ['Nevel'], englishAlt: ['Mist'], category: 'Weather' },
+
+  // --- GROCERIES (added) ---
+  { id: '616', latvian: 'Maize', dutch: 'Brood', english: 'Bread', category: 'Groceries' },
+  { id: '617', latvian: 'Siers', dutch: 'Kaas', english: 'Cheese', category: 'Groceries' },
+  { id: '618', latvian: 'Sviests', dutch: 'Boter', english: 'Butter', category: 'Groceries' },
+  { id: '619', latvian: 'Ola', dutch: 'Ei', english: 'Egg', category: 'Groceries' },
+  { id: '620', latvian: 'Gaļa', dutch: 'Vlees', english: 'Meat', category: 'Groceries' },
+  { id: '621', latvian: 'Vista', dutch: 'Kip', english: 'Chicken', category: 'Groceries' },
+  { id: '622', latvian: 'Cukurs', dutch: 'Suiker', english: 'Sugar', category: 'Groceries' },
+  { id: '623', latvian: 'Rīsi', dutch: 'Rijst', english: 'Rice', category: 'Groceries' },
+  { id: '624', latvian: 'Zupa', dutch: 'Soep', english: 'Soup', category: 'Groceries' },
+  { id: '625', latvian: 'Kūka', dutch: 'Taart', english: 'Cake', dutchAlt: ['Gebak', 'Cake'], category: 'Groceries' },
+  { id: '626', latvian: 'Saldējums', dutch: 'IJs', english: 'Ice cream', latvianAlt: ['Ledus'], category: 'Groceries' },
+  { id: '627', latvian: 'Šokolāde', dutch: 'Chocolade', english: 'Chocolate', category: 'Groceries' },
+  { id: '628', latvian: 'Rupjmaize', dutch: 'Roggebrood', english: 'Rye bread', englishAlt: ['Black bread'], category: 'Groceries' },
+  { id: '629', latvian: 'Biezpiens', dutch: 'Kwark', english: 'Cottage cheese', englishAlt: ['Quark'], category: 'Groceries' },
+
+  // --- LOVE & RELATIONSHIPS (added) ---
+  { id: '630', latvian: 'Mīlestība', dutch: 'Liefde', english: 'Love', category: 'Love & Relationships' },
+  { id: '631', latvian: 'Mīļā', dutch: 'Lieverd', english: 'Darling', latvianAlt: ['Mīļais'], dutchAlt: ['Schat'], englishAlt: ['Sweetheart', 'Honey'], category: 'Love & Relationships' },
+  { id: '632', latvian: 'Skūpsts', dutch: 'Kus', english: 'Kiss', dutchAlt: ['Zoen'], category: 'Love & Relationships' },
+  { id: '633', latvian: 'Apskāviens', dutch: 'Knuffel', english: 'Hug', category: 'Love & Relationships' },
+  { id: '634', latvian: 'Draudzene', dutch: 'Vriendin', english: 'Girlfriend', category: 'Love & Relationships' },
+  { id: '635', latvian: 'Kāzas', dutch: 'Bruiloft', english: 'Wedding', category: 'Love & Relationships' },
+  { id: '636', latvian: 'Man tevis pietrūkst.', dutch: 'Ik mis je.', english: 'I miss you.', latvianAlt: ['Tu man pietrūksti.'], dutchAlt: ['Ik mis jou.'], isSentence: true, category: 'Love & Relationships' },
+  { id: '637', latvian: 'Tu esi skaista.', dutch: 'Je bent mooi.', english: 'You are beautiful.', latvianAlt: ['Tu esi skaists.'], dutchAlt: ['Jij bent mooi.'], isSentence: true, category: 'Love & Relationships' },
+  { id: '638', latvian: 'Es domāju par tevi.', dutch: 'Ik denk aan je.', english: 'I am thinking of you.', dutchAlt: ['Ik denk aan jou.'], englishAlt: ['I\'m thinking of you.'], isSentence: true, category: 'Love & Relationships' },
+  { id: '639', latvian: 'Vai tu mani mīli?', dutch: 'Hou je van mij?', english: 'Do you love me?', dutchAlt: ['Hou jij van mij?'], isSentence: true, category: 'Love & Relationships' },
+  { id: '640', latvian: 'Tu mani dari laimīgu.', dutch: 'Jij maakt me gelukkig.', english: 'You make me happy.', dutchAlt: ['Je maakt me gelukkig.'], isSentence: true, category: 'Love & Relationships' },
+  { id: '641', latvian: 'Vai iesim kopā vakariņās?', dutch: 'Zullen we samen uit eten gaan?', english: 'Shall we go out for dinner together?', isSentence: true, category: 'Love & Relationships' },
+  { id: '642', latvian: 'Saldus sapņus!', dutch: 'Slaap lekker!', english: 'Sweet dreams!', dutchAlt: ['Welterusten!'], isSentence: true, category: 'Love & Relationships' },
+  { id: '643', latvian: 'Paldies, ka tu esi.', dutch: 'Bedankt dat je er bent.', english: 'Thank you for being there.', dutchAlt: ['Dank je dat je er bent.'], isSentence: true, category: 'Love & Relationships' },
+
+  // --- SOCIAL (added) ---
+  { id: '644', latvian: 'Kā tev gāja?', dutch: 'Hoe ging het?', english: 'How did it go?', isSentence: true, category: 'Social' },
+  { id: '645', latvian: 'Kas jauns?', dutch: 'Wat is er nieuw?', english: 'What\'s new?', isSentence: true, category: 'Social' },
+  { id: '646', latvian: 'Man iet labi, paldies.', dutch: 'Het gaat goed, dank je.', english: 'I\'m fine, thank you.', latvianAlt: ['Labi, paldies.'], dutchAlt: ['Goed, dank je.', 'Het gaat goed, bedankt.'], englishAlt: ['I am fine, thank you.'], isSentence: true, category: 'Social' },
+  { id: '647', latvian: 'Un tev?', dutch: 'En met jou?', english: 'And you?', dutchAlt: ['En jij?'], isSentence: true, category: 'Social' },
+  { id: '648', latvian: 'Līdz rītam!', dutch: 'Tot morgen!', english: 'See you tomorrow!', isSentence: true, category: 'Social' },
+  { id: '649', latvian: 'Atā!', dutch: 'Doei!', english: 'Bye!', latvianAlt: ['Čau!'], dutchAlt: ['Dag!'], isSentence: true, category: 'Social' },
+  { id: '650', latvian: 'Nav par ko.', dutch: 'Graag gedaan.', english: 'You\'re welcome.', dutchAlt: ['Geen dank.'], englishAlt: ['You are welcome.'], isSentence: true, category: 'Social' },
+  { id: '651', latvian: 'Piedod.', dutch: 'Sorry.', english: 'Sorry.', latvianAlt: ['Atvaino.'], dutchAlt: ['Het spijt me.'], englishAlt: ['I\'m sorry.'], isSentence: true, category: 'Social' },
+  { id: '652', latvian: 'Viss kārtībā.', dutch: 'Alles is in orde.', english: 'Everything is OK.', dutchAlt: ['Alles goed.', 'Prima.'], englishAlt: ['Everything is fine.'], isSentence: true, category: 'Social' },
+  { id: '653', latvian: 'Es nezinu, kur tas ir.', dutch: 'Ik weet niet waar het is.', english: 'I don\'t know where it is.', isSentence: true, category: 'Social' },
+  { id: '654', latvian: 'Vai drīkstu?', dutch: 'Mag ik?', english: 'May I?', isSentence: true, category: 'Social' },
 ];
 
 export const getBaseVocabulary = (): VocabularyItem[] => {
@@ -598,4 +767,47 @@ export const getBaseVocabulary = (): VocabularyItem[] => {
 export const getCategories = (): string[] => {
   const categories = new Set(initialVocabulary.map(item => item.category).filter(Boolean) as string[]);
   return Array.from(categories).sort();
+};
+
+type LangKey = 'latvian' | 'dutch' | 'english';
+
+const targetKey = (direction: LanguageDirection): LangKey => {
+  switch (direction) {
+    case LanguageDirection.NL_TO_LV:
+      return 'latvian';
+    case LanguageDirection.LV_TO_EN:
+      return 'english';
+    case LanguageDirection.LV_TO_NL:
+    default:
+      return 'dutch';
+  }
+};
+
+/** The answer we show to the user as "the" correct translation. */
+export const getPrimaryAnswer = (item: VocabularyItem, direction: LanguageDirection): string =>
+  item[targetKey(direction)];
+
+/**
+ * Every answer that counts as correct for this item and direction:
+ * the main translation, its slash-separated variants ("Wie/Wat?"),
+ * listed alternatives, and the informal/formal "alsjeblieft"/"alstublieft" swap.
+ */
+export const getAcceptedAnswers = (item: VocabularyItem, direction: LanguageDirection): string[] => {
+  const key = targetKey(direction);
+  const primary = item[key];
+  const alts = item[`${key}Alt` as const] ?? [];
+
+  const answers = new Set<string>([primary, ...alts]);
+  if (primary.includes('/')) {
+    primary.split('/').forEach(part => answers.add(part.trim()));
+  }
+
+  if (key === 'dutch') {
+    for (const answer of Array.from(answers)) {
+      if (/alstublieft/i.test(answer)) answers.add(answer.replace(/alstublieft/gi, 'alsjeblieft'));
+      if (/alsjeblieft/i.test(answer)) answers.add(answer.replace(/alsjeblieft/gi, 'alstublieft'));
+    }
+  }
+
+  return Array.from(answers).filter(Boolean);
 };

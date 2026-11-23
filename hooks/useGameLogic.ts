@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { VocabularyItem, FeedbackStatus, LanguageDirection, RoundHistoryItem, AppLanguage } from '../types';
-import { MARATHON_SIZE } from '../constants';
-import { getBaseVocabulary } from '../services/vocabularyService';
+import { MARATHON_SIZE, POINTS_FIRST_TRY, POINTS_SECOND_TRY } from '../constants';
+import { getBaseVocabulary, getAcceptedAnswers, getPrimaryAnswer } from '../services/vocabularyService';
 import { updateItemProgress, updateStreak, getDueItems, getProgress } from '../services/progressService';
 import { checkAnswerWithFuzzyMatch, shuffleArray } from '../utils/stringUtils';
 
@@ -171,8 +171,8 @@ export const useGameLogic = () => {
     let roundVocab: VocabularyItem[] = [];
 
     if (roundSize >= MARATHON_SIZE) {
-      // Marathon mode: take all candidates (already shuffled)
-      roundVocab = candidates;
+      // Marathon mode: exactly MARATHON_SIZE words (or fewer if the categories are small)
+      roundVocab = candidates.slice(0, MARATHON_SIZE);
     } else {
       // Get due items from shuffled candidates
       const dueItems = getDueItems(candidates, roundSize);
@@ -275,17 +275,15 @@ export const useGameLogic = () => {
   const checkAnswer = useCallback((t: any) => {
     if (!currentWord || languageDirection === null) return;
 
-    let correctTranslationRaw = '';
-    if (languageDirection === LanguageDirection.LV_TO_NL) {
-      correctTranslationRaw = currentWord.dutch;
-    } else if (languageDirection === LanguageDirection.NL_TO_LV) {
-      correctTranslationRaw = currentWord.latvian;
-    } else if (languageDirection === LanguageDirection.LV_TO_EN) {
-      correctTranslationRaw = currentWord.english;
-    }
+    const correctTranslationRaw = getPrimaryAnswer(currentWord, languageDirection);
+    const answerResult = checkAnswerWithFuzzyMatch(userInput, getAcceptedAnswers(currentWord, languageDirection));
+    const { isCorrect, isCloseCall, isAccentIssue, matchedAnswer } = answerResult;
 
-    const answerResult = checkAnswerWithFuzzyMatch(userInput, correctTranslationRaw);
-    const { isCorrect, isCloseCall } = answerResult;
+    const correctFeedback = (perfectMessage: string) => {
+      if (isAccentIssue) return `${t.feedback_accent} ${matchedAnswer}`;
+      if (isCloseCall) return `${t.feedback_close_call} → ${matchedAnswer}`;
+      return perfectMessage;
+    };
 
     let historyItemUpdate: Partial<RoundHistoryItem>;
 
@@ -294,9 +292,9 @@ export const useGameLogic = () => {
       updateItemProgress(currentWord.id, isCorrect);
 
       if (isCorrect) {
-        setFeedbackMessage(isCloseCall ? t.feedback_close_call : t.feedback_perfect);
+        setFeedbackMessage(correctFeedback(t.feedback_perfect));
         setFeedbackStatus(FeedbackStatus.CORRECT);
-        setScore((prevScore) => prevScore + 1);
+        setScore((prevScore) => prevScore + POINTS_FIRST_TRY);
         setIsAnswerChecked(true);
         historyItemUpdate = { userAttempts: [userInput], isCorrectOnFirstTry: true, isCorrectOnSecondTry: false };
       } else {
@@ -310,8 +308,9 @@ export const useGameLogic = () => {
       setIsAnswerChecked(true);
       let existingHistoryItem = roundHistory[roundHistory.length - 1];
       if (isCorrect) {
-        setFeedbackMessage(isCloseCall ? t.feedback_close_call : t.feedback_correct);
+        setFeedbackMessage(correctFeedback(t.feedback_correct));
         setFeedbackStatus(FeedbackStatus.CORRECT);
+        setScore((prevScore) => prevScore + POINTS_SECOND_TRY);
         historyItemUpdate = { userAttempts: [...existingHistoryItem.userAttempts, userInput], isCorrectOnSecondTry: true };
         // We don't update SRS on second attempt to avoid gaming it, or we could with a smaller increment
         // For now, only first attempt counts for SRS

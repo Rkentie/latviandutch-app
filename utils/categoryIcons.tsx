@@ -5,7 +5,8 @@ import {
   Hash, ListOrdered, Type, MapPin, Link2, HelpCircle,
   Monitor, Utensils, Heart, MessageCircle, AlertTriangle,
   Smile, Clock, Zap, MessageSquare, Users, Home, Car,
-  ShoppingBag, Frown, HelpCircle as QuestionMark
+  ShoppingBag, Frown, HelpCircle as QuestionMark,
+  Play, Timer, Building2, CloudSun, ShoppingBasket, HeartHandshake
 } from 'lucide-react';
 
 export const getCategoryIcon = (category: string) => {
@@ -54,6 +55,12 @@ export const getCategoryIcon = (category: string) => {
     case 'Questions': return <HelpCircle {...props} />;
     case 'Technology': return <Monitor {...props} />;
     case 'Kitchen': return <Utensils {...props} />;
+    case 'Common Verbs': return <Play {...props} />;
+    case 'Time Words': return <Timer {...props} />;
+    case 'Places': return <Building2 {...props} />;
+    case 'Weather': return <CloudSun {...props} />;
+    case 'Groceries': return <ShoppingBasket {...props} />;
+    case 'Love & Relationships': return <HeartHandshake {...props} />;
     default: return <Layers {...props} />;
   }
 };

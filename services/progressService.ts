@@ -66,16 +66,26 @@ export const updateItemProgress = (itemId: string, isCorrect: boolean): UserProg
     return progress;
 };
 
-export const updateStreak = (): number => {
+/** YYYY-MM-DD in the user's own timezone (toISOString would use UTC). */
+export const toLocalDateString = (date: Date): string => {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+};
+
+export const updateStreak = (now: Date = new Date()): number => {
     const progress = getProgress();
-    const today = new Date().toISOString().split('T')[0];
+    const today = toLocalDateString(now);
     const lastPlayed = progress.streak.lastPlayedDate;
 
     if (lastPlayed === today) {
         return progress.streak.currentStreak;
     }
 
-    const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+    const yesterdayDate = new Date(now);
+    yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+    const yesterday = toLocalDateString(yesterdayDate);
 
     if (lastPlayed === yesterday) {
         progress.streak.currentStreak += 1;
@@ -88,22 +98,26 @@ export const updateStreak = (): number => {
     return progress.streak.currentStreak;
 };
 
-export const getDueItems = (allVocabulary: VocabularyItem[], limit: number): VocabularyItem[] => {
+/**
+ * Pick up to `limit` items to practice:
+ * 1. Reviews that are due (words you've seen before), most overdue first.
+ * 2. Then new words you've never seen, in random order.
+ * Without this split, ~500 unseen words would crowd out the words you're
+ * actually forgetting.
+ */
+export const getDueItems = (allVocabulary: VocabularyItem[], limit: number, now: number = Date.now()): VocabularyItem[] => {
     const progress = getProgress();
-    const now = Date.now();
 
-    // Filter items that are due for review or new (level 0)
-    const dueItems = allVocabulary.filter(item => {
-        const itemProgress = progress.items[item.id];
-        if (!itemProgress) return true; // New item
-        return itemProgress.nextReviewDate <= now;
-    });
+    const dueReviews = allVocabulary
+        .filter(item => {
+            const p = progress.items[item.id];
+            return p !== undefined && p.nextReviewDate <= now;
+        })
+        .sort((a, b) => progress.items[a.id].nextReviewDate - progress.items[b.id].nextReviewDate);
 
-    // Shuffle due items to randomize order, then take the first 'limit' items
-    // This ensures randomization while still prioritizing due items over non-due items
-    const shuffledDueItems = shuffleArray(dueItems);
+    const newItems = shuffleArray(allVocabulary.filter(item => !progress.items[item.id]));
 
-    return shuffledDueItems.slice(0, limit);
+    return [...dueReviews, ...newItems].slice(0, limit);
 };
 
 export const getMasteryStats = (allVocabulary: VocabularyItem[]) => {

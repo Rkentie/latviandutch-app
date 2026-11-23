@@ -41,46 +41,86 @@ export const sanitizeAnswer = (answer: string): string => {
   if (!answer) return '';
   return answer
     .toLowerCase()
-    .replace(/[.,!?;:"']/g, '')
+    .normalize('NFC')
+    .replace(/[.,!?;:"'’‘“”¿¡]/g, '')
     .replace(/\s+/g, ' ')
     .trim();
 };
 
+/**
+ * Remove diacritics (ā → a, š → s, ë → e) so we can tell accent mistakes apart from real typos.
+ */
+export const stripDiacritics = (text: string): string =>
+  text.normalize('NFD').replace(/[̀-ͯ]/g, '').normalize('NFC');
+
+/**
+ * How many typos we forgive for an answer of this length.
+ * Short words get no tolerance: one letter often turns them into a different
+ * word (hij/zij, jij/wij, es/tu).
+ */
+export const typoTolerance = (length: number): number => {
+  if (length <= 4) return 0;
+  if (length <= 8) return 1;
+  return 2;
+};
+
 export type AnswerResult = {
   isCorrect: boolean;
-  isCloseCall: boolean; // typo within tolerance
+  isCloseCall: boolean; // accepted, but with a typo or missing accents
+  isAccentIssue: boolean; // only the diacritics were wrong (e.g. ludzu vs lūdzu)
+  matchedAnswer?: string; // the accepted answer that matched best
+};
+
+const matchSingle = (sanitizedUser: string, correctAnswer: string): AnswerResult => {
+  const sanitizedCorrect = sanitizeAnswer(correctAnswer);
+  const incorrect: AnswerResult = { isCorrect: false, isCloseCall: false, isAccentIssue: false };
+
+  if (!sanitizedUser || !sanitizedCorrect) return incorrect;
+
+  if (sanitizedUser === sanitizedCorrect) {
+    return { isCorrect: true, isCloseCall: false, isAccentIssue: false, matchedAnswer: correctAnswer };
+  }
+
+  const plainUser = stripDiacritics(sanitizedUser);
+  const plainCorrect = stripDiacritics(sanitizedCorrect);
+
+  if (plainUser === plainCorrect) {
+    return { isCorrect: true, isCloseCall: true, isAccentIssue: true, matchedAnswer: correctAnswer };
+  }
+
+  // Typos are measured without accents, so a missing accent never costs typo budget.
+  const distance = levenshteinDistance(plainUser, plainCorrect);
+  if (distance <= typoTolerance(plainCorrect.length)) {
+    return { isCorrect: true, isCloseCall: true, isAccentIssue: false, matchedAnswer: correctAnswer };
+  }
+
+  return incorrect;
+};
+
+const rank = (r: AnswerResult): number => {
+  if (!r.isCorrect) return 0;
+  if (!r.isCloseCall) return 3;
+  return r.isAccentIssue ? 2 : 1;
 };
 
 /**
- * Check if the user's answer is correct, allowing for small typos
- * @param userAnswer - The user's input
- * @param correctAnswer - The correct translation
- * @returns Object with isCorrect and isCloseCall flags
+ * Check if the user's answer matches one of the accepted answers.
+ * Exact matches win over accent-only mistakes, which win over small typos.
  */
 export const checkAnswerWithFuzzyMatch = (
   userAnswer: string,
-  correctAnswer: string
+  correctAnswers: string | string[]
 ): AnswerResult => {
+  const answers = Array.isArray(correctAnswers) ? correctAnswers : [correctAnswers];
   const sanitizedUser = sanitizeAnswer(userAnswer);
-  const sanitizedCorrect = sanitizeAnswer(correctAnswer);
-  
-  // Exact match
-  if (sanitizedUser === sanitizedCorrect) {
-    return { isCorrect: true, isCloseCall: false };
+
+  let best: AnswerResult = { isCorrect: false, isCloseCall: false, isAccentIssue: false };
+  for (const answer of answers) {
+    const result = matchSingle(sanitizedUser, answer);
+    if (rank(result) > rank(best)) best = result;
+    if (rank(best) === 3) break;
   }
-  
-  // Calculate allowed typos based on word length
-  const distance = levenshteinDistance(sanitizedUser, sanitizedCorrect);
-  const wordLength = sanitizedCorrect.length;
-  
-  // Tolerance: 1 mistake for words up to 5 chars, 2 mistakes for longer words
-  const tolerance = wordLength <= 5 ? 1 : 2;
-  
-  if (distance <= tolerance) {
-    return { isCorrect: true, isCloseCall: true };
-  }
-  
-  return { isCorrect: false, isCloseCall: false };
+  return best;
 };
 
 /**
